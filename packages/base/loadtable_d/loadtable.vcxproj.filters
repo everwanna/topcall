@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\inifile.cpp" />
+    <ClCompile Include="src\linkmgr.cpp" />
+    <ClCompile Include="src\ltable.cpp" />
+    <ClCompile Include="src\ltmgr.cpp" />
+    <ClCompile Include="src\msghandler.cpp" />
+    <ClCompile Include="src\netlink.cpp" />
+    <ClCompile Include="src\netloop.cpp" />
+    <ClCompile Include="src\slavemgr.cpp" />
+    <ClCompile Include="src\netlistener.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\config.h" />
+    <ClInclude Include="src\inifile.h" />
+    <ClInclude Include="src\link.h" />
+    <ClInclude Include="src\linkmgr.h" />
+    <ClInclude Include="src\ltable.h" />
+    <ClInclude Include="src\ltconfig.h" />
+    <ClInclude Include="src\ltitem.h" />
+    <ClInclude Include="src\ltmgr.h" />
+    <ClInclude Include="src\msghandler.h" />
+    <ClInclude Include="src\netlink.h" />
+    <ClInclude Include="src\netloop.h" />
+    <ClInclude Include="src\slavemgr.h" />
+    <ClInclude Include="src\slave.h" />
+    <ClInclude Include="src\netlistener.h" />
+  </ItemGroup>
+</Project>

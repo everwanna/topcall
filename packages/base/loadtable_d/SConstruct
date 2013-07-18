@@ -1,0 +1,7 @@
+env = Environment()
+flags=env.ParseFlags( ' -I../../../include '  ' -I./ '  ' -I./src ')
+for k,v in sorted(flags.items()):
+	if v:
+		print k,v
+env.MergeFlags(flags)
+env.Program('loadtable', [Glob('src/*.cpp'), 'main.cpp'], LIBS=['event_core'])
