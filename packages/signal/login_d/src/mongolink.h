@@ -4,6 +4,7 @@
 #include "config.h"
 #include <string>
 
+struct UInfo;
 class MongoLink {
 public:
 	MongoLink();
@@ -11,7 +12,7 @@ public:
 
 public:
 	int		connect(const std::string& ip, short port);
-	int		verify(int uid, const std::string& passport, const std::string& passwd);
+	UInfo*	query(const std::string& passport);
 
 private:
 	mongo	m_mongo;

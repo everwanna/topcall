@@ -3,6 +3,7 @@
 #include "msghandler.h"
 #include "linkmgr.h"
 #include "mongolink.h"
+#include "uinfomgr.h"
 
 LoginMgr::LoginMgr(const LoginConfig& config)
 	: m_config(config)
@@ -11,6 +12,9 @@ LoginMgr::LoginMgr(const LoginConfig& config)
 	m_pHandler = new MsgHandler(this);
 	m_pLinkMgr = new LinkMgr();
 	m_pMongo = new MongoLink();
+	m_pMongo->connect( m_config.udb_ip, m_config.udb_port);
+	m_pUInfoMgr = new UInfoMgr();
+
 	m_nSeq = 0;
 }
 
@@ -27,6 +31,9 @@ LoginMgr::~LoginMgr() {
 	}
 	if( m_pMongo ) {
 		delete m_pMongo;
+	}
+	if( m_pUInfoMgr ) {
+		delete m_pUInfoMgr;
 	}
 }
 

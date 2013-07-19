@@ -9,6 +9,7 @@ class MsgHandler;
 class LTable;
 class LinkMgr;
 class MongoLink;
+class UInfoMgr;
 class LoginMgr {
 public:
 	LoginMgr(const LoginConfig& config);
@@ -24,6 +25,7 @@ public:
 	inline LTable*		getLTable() { return m_pLTable; }
 	inline LinkMgr*		getLinkMgr() { return m_pLinkMgr; }	
 	inline MongoLink*	getMongo() { return m_pMongo; }
+	inline UInfoMgr*	getUInfoMgr() { return m_pUInfoMgr; }
 	inline LoginConfig*	getConfig() { return &m_config; }		//yeah, take care here.
 
 private:
@@ -32,6 +34,7 @@ private:
 	LTable*		m_pLTable;
 	LinkMgr*	m_pLinkMgr;	
 	MongoLink*	m_pMongo;
+	UInfoMgr*	m_pUInfoMgr;
 	LoginConfig	m_config;
 	int			m_nSeq;
 };

@@ -4,14 +4,14 @@
 #include "config.h"
 #include <map>
 
-class UInfo;
+struct UInfo;
 class UInfoMgr {
 public:
 	UInfoMgr();
 	~UInfoMgr();
 
 public:
-	void	add(int uid, int linkid, const std::string& passport, const std::string& password);
+	void	add(UInfo* uinfo);
 	UInfo*	get(int uid);
 
 private:

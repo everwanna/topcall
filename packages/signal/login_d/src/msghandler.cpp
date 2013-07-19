@@ -3,6 +3,8 @@
 #include "netloop.h"
 #include "linkmgr.h"
 #include "mongolink.h"
+#include "uinfo.h"
+#include "uinfomgr.h"
 
 using namespace login;
 
@@ -33,15 +35,40 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 }
 
 void	MsgHandler::onLoginReq(int linkid, Unpack* up) {
+	PLoginRes res;
+	UInfo* uinfo = NULL;
+
 	PLoginReq req;
 	req.unmarshall(*up);
 
 	LOG(TAG_LOGIN, "login user with uid=%d, passport=%s.", req.uid, req.passport.c_str());
 	//verify the user:
-	int rc = m_pLoginMgr->getMongo()->verify(req.uid, req.passport, req.password);
-	PLoginRes res;
-	res.res = rc;
-	
+	//cache first:
+	if( req.uid != 0 ) {
+		uinfo = m_pLoginMgr->getUInfoMgr()->get(req.uid);
+	} else {
+		//mongodb next:
+		uinfo = m_pLoginMgr->getMongo()->query(req.passport);
+		if( uinfo != NULL ) {
+			//add to cache, no matter passport is good or not.
+			m_pLoginMgr->getUInfoMgr()->add(uinfo);
+		}
+	}
+	if( uinfo == NULL ) {
+		res.res = RES_FAIL;
+	} else {
+		if( uinfo->password != req.passport ) {
+			res.res = RES_FAIL;
+		} else {
+			res.res = RES_OK;
+			res.uid = uinfo->uid;
+			res.cookie = uinfo->cookie;	//nothing for now.
+		}
+	}	
+	Pack pk(SVID_LOGIN, PLoginRes::uri);
+	res.marshall(pk);
+	pk.pack();
+	m_pLoginMgr->getLinkMgr()->send( linkid, pk.getBuf(), pk.getLen() );
 
 	//save the uid to LinkMgr.
 	m_pLoginMgr->getLinkMgr()->setUid(req.uid, linkid);

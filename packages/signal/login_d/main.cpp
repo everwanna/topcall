@@ -24,6 +24,8 @@ int main(int argc, char* argv[])
 	config.area = ini.getInt("login", "area");
 	config.disp_ip = ini.getString("login", "disp_ip");
 	config.disp_port = ini.getInt("login", "disp_port");
+	config.udb_ip = ini.getString("login", "udb_ip");
+	config.udb_port = ini.getInt("login", "udb_port");
 
 	if( config.name.length() == 0 ||
 		config.ip.length() == 0 ||
@@ -41,6 +43,8 @@ int main(int argc, char* argv[])
 	LOG(TAG_LOGIN, "	area    = %d ", config.area);
 	LOG(TAG_LOGIN, "	master_ip   = %s ", config.disp_ip.c_str());
 	LOG(TAG_LOGIN, "	master_port = %d ", config.disp_port);
+	LOG(TAG_LOGIN, "	udb_ip   = %s ", config.udb_ip.c_str());
+	LOG(TAG_LOGIN, "	udb_port = %d ", config.udb_port);
 
 	LoginMgr* mgr = new LoginMgr(config);
 	mgr->run();

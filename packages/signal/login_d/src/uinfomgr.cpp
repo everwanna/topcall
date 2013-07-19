@@ -1,4 +1,5 @@
 #include "uinfomgr.h"
+#include "uinfo.h"
 
 UInfoMgr::UInfoMgr() {
 }
@@ -6,8 +7,9 @@ UInfoMgr::UInfoMgr() {
 UInfoMgr::~UInfoMgr() {
 }
 
-void	UInfoMgr::add(int linkid, int uid, const std::string& passport, const std::string& password) {
-
+void	UInfoMgr::add(UInfo* uinfo) {
+	//we should not need a verification here.
+	m_mapUInfos[uinfo->uid] = uinfo;
 }
 
 UInfo*	UInfoMgr::get(int uid) {
