@@ -14,6 +14,7 @@ public:
 
 public:
 	void	onMGAllocRes(int linkid, const sockaddr_in* peer_addr, Unpack* up);
+	void	onCreateReq(int linkid, const sockaddr_in* peer_addr, Unpack* up);
 	void	onMPJoinReq(int linkid, const sockaddr_in* peer_addr, Unpack* up);
 	void	onMPLeaveReq(int linkid, const sockaddr_in* peer_addr, Unpack* up);
 	void	onMPPing(int linkid, const sockaddr_in* peer_addr, Unpack* up);

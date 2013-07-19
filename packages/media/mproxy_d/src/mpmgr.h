@@ -11,7 +11,6 @@ class NetLoop;
 class MsgHandler;
 class Msg;
 class MsgPool;
-class BlackList;
 class MsgCacheMgr;
 class LoadMgr;
 class Report;
@@ -40,7 +39,6 @@ public:
 	inline MsgHandler*	getHandler() { return m_pHandler; }
 	inline NetLoop*		getLooper() { return m_pLooper; }
 	inline MsgPool*		getMsgPool() { return m_pMsgPool; }
-	inline BlackList*	getBlackList() { return m_pBlackList; }
 	inline MsgCacheMgr*	getCacheMgr() { return m_pCacheMgr; }
 	inline LoadMgr*		getLoadMgr() { return m_pLoadMgr; }
 	inline SessMgr*		getSessMgr() { return m_pSessMgr; }
@@ -50,7 +48,6 @@ private:
 	NetLoop*	m_pLooper;
 	MsgHandler*	m_pHandler;
 	MsgPool*	m_pMsgPool;
-	BlackList*	m_pBlackList;
 	MsgCacheMgr*m_pCacheMgr;
 	LoadMgr*	m_pLoadMgr;
 	Report*		m_pReport;

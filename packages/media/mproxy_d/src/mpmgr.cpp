@@ -2,7 +2,6 @@
 #include "netloop.h"
 #include "msghandler.h"
 #include "msgpool.h"
-#include "blacklist.h"
 #include "msg.h"
 #include "msgcachemgr.h"
 #include "loadmgr.h"
@@ -16,7 +15,6 @@ MPMgr::MPMgr(const MPConfig& config)
 	m_pLooper = new NetLoop(this, config.mg_ip, config.mg_port, config.port);
 	m_pHandler = new MsgHandler(this);
 	m_pMsgPool = new MsgPool();
-	m_pBlackList = new BlackList();
 	m_pCacheMgr = new MsgCacheMgr();
 	m_pLoadMgr = new LoadMgr(this, config.load_max);
 	m_pReport = new Report(this);
@@ -32,9 +30,6 @@ MPMgr::~MPMgr() {
 	}
 	if( m_pMsgPool ) {
 		delete m_pMsgPool;
-	}
-	if( m_pBlackList ) {
-		delete m_pBlackList;
 	}
 	if( m_pCacheMgr ) {
 		delete m_pCacheMgr; 

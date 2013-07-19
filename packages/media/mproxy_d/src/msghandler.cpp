@@ -8,7 +8,6 @@
 #include "msgcachemgr.h"
 #include "loadmgr.h"
 #include "netloop.h"
-#include "blacklist.h"
 
 MsgHandler::MsgHandler(MPMgr* mgr) {
 	m_pMPMgr = mgr;
@@ -31,16 +30,6 @@ void	MsgHandler::handle(int linkid, const sockaddr_in* peer_addr, char* msg, int
 		return;
 	}
 
-/*
-#ifdef BLACKLIST_ENABLE
-	//[TBD]
-	//There should be something to control iptable.
-	if( m_pMPMgr->getBlackList()->isBlocked(peer_addr->sin_addr.s_addr, peer_addr->sin_port) ) {
-		return;
-	}
-#endif
-*/
-
 	//
 	//special case here, because most of the packages are PMPStreamData, I don't want the switch jump.
 	//Audio PPS: 5000*25 = 125k (package per second)
@@ -51,8 +40,10 @@ void	MsgHandler::handle(int linkid, const sockaddr_in* peer_addr, char* msg, int
 	}
 
 	switch(up.getUri() ) {
-	case PMGAllocRes::uri:
-		onMGAllocRes(linkid, peer_addr, &up);
+	//case PMGAllocRes::uri:
+	//	onMGAllocRes(linkid, peer_addr, &up);
+	//	break;
+	case PMPCreateReq::uri:
 		break;
 	case PMPJoinReq::uri:
 		onMPJoinReq(linkid, peer_addr, &up);
@@ -78,6 +69,28 @@ void	MsgHandler::onMGAllocRes(int linkid, const sockaddr_in* peer_addr, Unpack* 
 
 	LOG(TAG_MPROXY, "MsgHandler::onMGAllocRes, linkid=%d, stream=%s", linkid, res.cookie.c_str());
 	m_pMPMgr->getSessMgr()->createSession(res.stream);
+}
+
+void	MsgHandler::onCreateReq(int linkid, const sockaddr_in* peer_addr, Unpack* up) {
+	PMPCreateRes res;
+
+	PMPCreateReq req;
+	req.unmarshall(*up);
+
+	LOG(TAG_MPROXY, "MsgHandler::onCreateReq, linkid=%d, uid=%d, stream=%s", linkid, req.uid, req.stream.c_str());
+	Session* sess = m_pMPMgr->getSessMgr()->createSession(req.stream);
+	if( sess == NULL ) {
+		res.res = RES_FAIL;
+	} else {
+		res.res = RES_OK;
+		res.uid = req.uid;
+		res.nick = req.nick;
+		res.stream = req.stream;		
+	}
+	Pack pk(SVID_MPROXY, PMPCreateRes::uri);
+	res.marshall(pk);
+	pk.pack();
+	m_pMPMgr->getLooper()->send(linkid, peer_addr, pk.getBuf(), pk.getLen() );
 }
 
 void	MsgHandler::onMPJoinReq(int linkid, const sockaddr_in* peer_addr, Unpack* up) {

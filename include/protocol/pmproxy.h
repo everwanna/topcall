@@ -3,6 +3,9 @@
 
 #include "core/packet.h"
 
+#define URI_MPROXY_CREATE_REQ			1
+#define URI_MPROXY_CREATE_RES			2
+
 #define URI_MPROXY_JOIN_REQ				5
 #define URI_MPROXY_JOIN_RES				6
 #define URI_MPROXY_LEAVE_REQ			7
@@ -13,6 +16,48 @@
 #define URI_MPROXY_STREAM_DATA			100
 #define URI_MPROXY_STREAM_DATA2			101
 #define URI_MPROXY_RESEND_REQ			102
+
+struct PMPCreateReq : Packet {
+	enum { uri=URI_MPROXY_CREATE_REQ };
+	
+	int			uid;
+	std::string	nick;
+	std::string	stream;
+	virtual void	unmarshall(Unpack& up) {
+		uid = up.popInt32();
+		nick = up.popString();
+		stream = up.popString();
+	}
+
+	virtual void	marshall(Pack& pk) {
+		pk.pushInt32(uid);
+		pk.pushString(nick);
+		pk.pushString(stream);
+	}
+};
+
+
+struct PMPCreateRes : Packet {
+	enum { uri=URI_MPROXY_CREATE_RES };
+	
+	int			res;
+	int			uid;
+	std::string	nick;
+	std::string	stream;
+	virtual void	unmarshall(Unpack& up) {
+		res = up.popInt32();
+		uid = up.popInt32();
+		nick = up.popString();
+		stream = up.popString();
+	}
+
+	virtual void	marshall(Pack& pk) {
+		pk.pushInt32(res);
+		pk.pushInt32(uid);
+		pk.pushString(nick);
+		pk.pushString(stream);
+	}
+};
 
 struct PMPJoinReq : Packet {
 	enum { uri=URI_MPROXY_JOIN_REQ };

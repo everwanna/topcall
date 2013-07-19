@@ -1,7 +1,6 @@
 #include "netloop.h"
 #include "mpmgr.h"
 #include "msghandler.h"
-#include "blacklist.h"
 
 NetLoop::NetLoop(MPMgr* mgr, const std::string& mg_ip, int mg_port, int port) 
 	: m_pMPMgr(mgr)
@@ -155,14 +154,7 @@ void	NetLoop::read_cb(int fd, short event, void* arg)
 		LOG(TAG_MPROXY, "NetLoop::read_cb, len <= 4 || msg_len>len-4, len=%d.", len);	
 		return;
 	}
-	
-#ifdef BLACKLIST_ENABLE
-	int block = loop->m_pMPMgr->getBlackList()->isBlocked(from.sin_addr.s_addr, from.sin_port);
-	if( block != BL_REASON_NO ) {
-		LOG(TAG_MPROXY, "NetLoop::read_cb, blocked reason/ip=%d, %d.", block, from.sin_addr.s_addr);	
-		return;
-	}
-#endif
+
 	loop->m_pMPMgr->getHandler()->handle(fd, &from, loop->m_pBuffer, len);							
 }
 
