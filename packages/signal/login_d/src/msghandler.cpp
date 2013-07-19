@@ -2,6 +2,7 @@
 #include "loginmgr.h"
 #include "netloop.h"
 #include "linkmgr.h"
+#include "mongolink.h"
 
 using namespace login;
 
@@ -37,7 +38,10 @@ void	MsgHandler::onLoginReq(int linkid, Unpack* up) {
 
 	LOG(TAG_LOGIN, "login user with uid=%d, passport=%s.", req.uid, req.passport.c_str());
 	//verify the user:
-
+	int rc = m_pLoginMgr->getMongo()->verify(req.uid, req.passport, req.password);
+	PLoginRes res;
+	res.res = rc;
+	
 
 	//save the uid to LinkMgr.
 	m_pLoginMgr->getLinkMgr()->setUid(req.uid, linkid);

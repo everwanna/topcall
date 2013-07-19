@@ -2,7 +2,7 @@
 #include "netloop.h"
 #include "loginmgr.h"
 #include "msghandler.h"
-#include "ltconfig.h"
+#include "loginconfig.h"
 
 NetLink::NetLink(NetLoop* loop, const std::string& name, const std::string& ip, short port) 
 	: m_pLooper(loop)

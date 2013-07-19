@@ -2,6 +2,7 @@
 #include "netloop.h"
 #include "msghandler.h"
 #include "linkmgr.h"
+#include "mongolink.h"
 
 LoginMgr::LoginMgr(const LoginConfig& config)
 	: m_config(config)
@@ -9,6 +10,7 @@ LoginMgr::LoginMgr(const LoginConfig& config)
 	m_pLooper = new NetLoop(this, m_config.disp_ip, m_config.disp_port, m_config.port);
 	m_pHandler = new MsgHandler(this);
 	m_pLinkMgr = new LinkMgr();
+	m_pMongo = new MongoLink();
 	m_nSeq = 0;
 }
 
@@ -22,6 +24,9 @@ LoginMgr::~LoginMgr() {
 	}
 	if( m_pLinkMgr ) {
 		delete m_pLinkMgr;
+	}
+	if( m_pMongo ) {
+		delete m_pMongo;
 	}
 }
 

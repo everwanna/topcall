@@ -1,6 +1,6 @@
 #include "loginmgr.h"
 #include "inifile.h"
-#include "ltconfig.h"
+#include "loginconfig.h"
 
 int main(int argc, char* argv[])
 {
