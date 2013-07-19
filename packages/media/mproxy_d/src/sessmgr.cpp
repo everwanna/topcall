@@ -52,3 +52,4 @@ void	SessMgr::deleteSession(int sid) {
 	m_mapSessions.erase(it);
 	delete sess;
 }
+

@@ -220,7 +220,7 @@ void	NetLoop::mgroup_event_cb(bufferevent *bev, short events, void *user_data)
 	NetLoop* loop = (NetLoop*)user_data;
 	int linkid = bufferevent_getfd(bev);
 
-	if (events & BEV_EVENT_ERROR) {
+	if (events & BEV_EVENT_ERROR | events & BEV_EVENT_EOF ) {
 		LOG(TAG_MPROXY, "Disconnected from mproxy, linkid=%d", linkid);
 		loop->closeMG();
 		loop->stopReconnMG();
