@@ -11,8 +11,8 @@ struct DispConfig {
 	int		area;
 
 
-	std::string	disp_ip;
-	short		disp_port;
+	std::string	router_ip;
+	short		router_port;
 	
 };
 

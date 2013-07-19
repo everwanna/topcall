@@ -6,9 +6,13 @@
 #include "netlink.h"
 #include "netlistener.h"
 
-NetLoop::NetLoop(RouteMgr* mgr, const std::string& disp_ip, short disp_port, short port) 
+NetLoop::NetLoop(RouteMgr* mgr, 
+				 const std::string& router1_ip, short router1_port, 
+				 const std::string& router2_ip, short router2_port, 
+				 const std::string& router3_ip, short router3_port, 
+				 const std::string& router4_ip, short router4_port, 
+				 short port) 
 	: m_pMgr(mgr)
-	, m_pDispLink(NULL)
 {
 #ifdef WIN32
 	WSADATA WSAData;
@@ -20,9 +24,26 @@ NetLoop::NetLoop(RouteMgr* mgr, const std::string& disp_ip, short disp_port, sho
 #endif
 	m_event_base = event_base_new();
 
-	//connect to master link:
-	m_pDispLink = new NetLink(this, "dispatcer_link", disp_ip.c_str(), disp_port);
-	m_pDispLink->connect();
+	//connect to other routers:
+	{
+
+		if( router1_ip.length() != 0 && router1_port != 0 ) {
+			m_pRouter1 = new NetLink(this, "router1", router1_ip.c_str(), router1_port);
+			m_pRouter1->connect();
+		}
+		if( router2_ip.length() != 0 && router2_port != 0 ) {
+			m_pRouter2 = new NetLink(this, "router2", router2_ip.c_str(), router2_port);
+			m_pRouter2->connect();
+		}
+		if( router3_ip.length() != 0 && router3_port != 0 ) {
+			m_pRouter3 = new NetLink(this, "router3", router3_ip.c_str(), router3_port);
+			m_pRouter3->connect();
+		}
+		if( router4_ip.length() != 0 && router4_port != 0 ) {
+			m_pRouter4 = new NetLink(this, "router4", router4_ip.c_str(), router4_port);
+			m_pRouter4->connect();
+		}
+	}
 
 	//startup tcp listener:
 	m_pListener = new NetListener(this);
@@ -58,14 +79,6 @@ void	NetLoop::run()
 	event_base_dispatch(m_event_base);
 }
 
-void	NetLoop::sendDispatcher(const char* data, int len) {
-	if( m_pDispLink != NULL ) {
-		m_pDispLink->send(data, len);
-	} else {
-		//message lost? should bring down this proxy.
-	}
-}
-
 /**
  * This function must be optimize later.
  */
@@ -82,3 +95,5 @@ void	NetLoop::timer_cb(int fd, short event, void* arg ) {
 	NetLoop* loop = (NetLoop*)arg;	
 	loop->m_pMgr->onTimer();
 }
+
+

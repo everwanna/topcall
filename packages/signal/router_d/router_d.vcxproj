@@ -87,18 +87,20 @@
     <ClCompile Include="src\netlink.cpp" />
     <ClCompile Include="src\netlistener.cpp" />
     <ClCompile Include="src\netloop.cpp" />
+    <ClCompile Include="src\routerlinkmgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\config.h" />
     <ClInclude Include="src\inifile.h" />
     <ClInclude Include="src\link.h" />
     <ClInclude Include="src\linkmgr.h" />
-    <ClInclude Include="src\dispconfig.h" />
+    <ClInclude Include="src\routeconfig.h" />
     <ClInclude Include="src\routemgr.h" />
     <ClInclude Include="src\msghandler.h" />
     <ClInclude Include="src\netlink.h" />
     <ClInclude Include="src\netlistener.h" />
     <ClInclude Include="src\netloop.h" />
+    <ClInclude Include="src\routerlinkmgr.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

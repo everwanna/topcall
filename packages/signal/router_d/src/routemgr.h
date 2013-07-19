@@ -2,14 +2,15 @@
 #define _ROUTEMGR_H_
 
 #include "config.h"
-#include "dispconfig.h"
+#include "routeconfig.h"
 
 class NetLoop;
 class MsgHandler;
 class LinkMgr;
+class RouterLinkMgr;
 class RouteMgr {
 public:
-	RouteMgr(const DispConfig& config);
+	RouteMgr(const RouteConfig& config);
 	~RouteMgr();
 
 public:
@@ -20,13 +21,15 @@ public:
 	inline NetLoop*		getLooper() { return m_pLooper; }
 	inline MsgHandler*	getHandler() { return m_pHandler; }	
 	inline LinkMgr*		getLinkMgr() { return m_pLinkMgr; }
-	inline DispConfig*	getConfig() { return &m_config; }		//yeah, take care here.
+	inline RouterLinkMgr*getRouterLinkMgr() { return m_pRouterLinkMgr; }
+	inline RouteConfig*	getConfig() { return &m_config; }		//yeah, take care here.
 
 private:
 	NetLoop*	m_pLooper;
 	MsgHandler*	m_pHandler;	
 	LinkMgr*	m_pLinkMgr;
-	DispConfig	m_config;
+	RouterLinkMgr*m_pRouterLinkMgr;
+	RouteConfig	m_config;
 	int			m_nSeq;
 };
 

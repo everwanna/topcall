@@ -41,11 +41,13 @@ struct PMPCreateRes : Packet {
 	enum { uri=URI_MPROXY_CREATE_RES };
 	
 	int			res;
+	int			sid;
 	int			uid;
 	std::string	nick;
 	std::string	stream;
 	virtual void	unmarshall(Unpack& up) {
 		res = up.popInt32();
+		sid = up.popInt32();
 		uid = up.popInt32();
 		nick = up.popString();
 		stream = up.popString();
@@ -53,6 +55,7 @@ struct PMPCreateRes : Packet {
 
 	virtual void	marshall(Pack& pk) {
 		pk.pushInt32(res);
+		pk.pushInt32(sid);
 		pk.pushInt32(uid);
 		pk.pushString(nick);
 		pk.pushString(stream);
@@ -62,16 +65,19 @@ struct PMPCreateRes : Packet {
 struct PMPJoinReq : Packet {
 	enum { uri=URI_MPROXY_JOIN_REQ };
 	
+	int			sid;
 	int			uid;
 	std::string	nick;
 	std::string	stream;
 	virtual void	unmarshall(Unpack& up) {
+		sid = up.popInt32();
 		uid = up.popInt32();
 		nick = up.popString();
 		stream = up.popString();
 	}
 
 	virtual void	marshall(Pack& pk) {
+		pk.pushInt32(sid);
 		pk.pushInt32(uid);
 		pk.pushString(nick);
 		pk.pushString(stream);

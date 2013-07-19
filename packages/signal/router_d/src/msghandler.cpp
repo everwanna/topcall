@@ -2,6 +2,8 @@
 #include "routemgr.h"
 #include "netloop.h"
 #include "linkmgr.h"
+#include "link.h"
+#include "routerlinkmgr.h"
 
 using namespace login;
 
@@ -22,10 +24,21 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 	up.popHead();
 
 	switch( up.getUri() ) {
+	case URI_REGROUTER_REQ:
+		onRegRouterReq(linkid, &up);
+		break;
 	case URI_SEND_REQ:
 		onSendReq(linkid, &up);
 		break;
 	}
+}
+
+void	MsgHandler::onRegRouterReq(int linkid, Unpack* up) {
+	PRegRouterReq req;
+	req.unmarshall(*up);
+
+	LOG(TAG_DISPATCHER, "router register, name=%s", req.name.c_str());
+	m_pLoginMgr->getRouterLinkMgr()->set(req.name, linkid);	
 }
 
 void	MsgHandler::onSendReq(int linkid, Unpack* up) {
@@ -39,7 +52,14 @@ void	MsgHandler::onSendReq(int linkid, Unpack* up) {
 
 	} else {
 		//query the online db, and send:
+		std::string router = "";
+		int linkid = m_pLoginMgr->getRouterLinkMgr()->get(router);
+		if( linkid <= 0 ) {
+			LOG(TAG_DISPATCHER, "MsgHandler::onSendReq, dispatcher doesn't exist, name=%s", router);
+			return;
+		}
 
+		m_pLoginMgr->getLinkMgr()->send(linkid, up->getBuf(), up->getLen());
 	}
 }
 

@@ -2,7 +2,7 @@
 #include "netloop.h"
 #include "routemgr.h"
 #include "msghandler.h"
-#include "dispconfig.h"
+#include "routeconfig.h"
 
 NetLink::NetLink(NetLoop* loop, const std::string& name, const std::string& ip, short port) 
 	: m_pLooper(loop)
@@ -84,7 +84,7 @@ void	NetLink::read_cb(struct bufferevent *bev, void *ctx)
 		if( msg_len <= len ) {
 			evbuffer_remove(src, link->m_pLooper->getBuffer(), msg_len);
 
-			link->m_pLooper->getLTMgr()->getHandler()->handle(bufferevent_getfd(bev), link->m_pLooper->getBuffer(), msg_len);						
+			link->m_pLooper->getMgr()->getHandler()->handle(bufferevent_getfd(bev), link->m_pLooper->getBuffer(), msg_len);						
 			if( msg_len == len ) {
 				break;
 			}
@@ -114,6 +114,16 @@ void	NetLink::event_cb(bufferevent *bev, short events, void *user_data)
 	} else if( events&BEV_EVENT_CONNECTED ) {
 		LOG(TAG_DISPATCHER, "%s connected, linkid=%d, ip=%s, port=%d", link->m_strName.c_str(), linkid, link->m_strIp.c_str(), link->m_nPort);
 		link->stopReconn();
+
+		//register the router:
+		login::PRegRouterReq req;
+		req.name = link->m_pLooper->getMgr()->getConfig()->name;
+		
+		Pack pk(SVID_LOGIN, login::PRegRouterReq::uri);
+		req.marshall(pk);
+		pk.pack();
+
+		link->send(pk.getBuf(), pk.getLen());
 	}
 }
 

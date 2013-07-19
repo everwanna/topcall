@@ -6,7 +6,7 @@
 DispMgr::DispMgr(const DispConfig& config)
 	: m_config(config)
 {
-	m_pLooper = new NetLoop(this, m_config.disp_ip, m_config.disp_port, m_config.port);
+	m_pLooper = new NetLoop(this, m_config.router_ip, m_config.router_port, m_config.port);
 	m_pHandler = new MsgHandler(this);
 	m_pLinkMgr = new LinkMgr();
 	m_nSeq = 0;

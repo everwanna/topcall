@@ -49,7 +49,7 @@ void	NetListener::listener_cb(evconnlistener *listener, evutil_socket_t fd, sock
 	link->bev = bev;
 	link->stamp = nl->m_pLooper->getSystemTime();
 	link->closed = false;
-	nl->m_pLooper->getLTMgr()->getLinkMgr()->addLink(link);
+	nl->m_pLooper->getMgr()->getLinkMgr()->addLink(link);
 
 	LOG(TAG_DISPATCHER, "connect from linkid=%d, ip/port=%s, %d", linkid, inet_ntoa(addr->sin_addr), addr->sin_port);
 }
@@ -81,7 +81,7 @@ void	NetListener::read_cb(struct bufferevent *bev, void *ctx)
 		if( msg_len <= len ) {			
 			evbuffer_remove(src, listener->m_pLooper->getBuffer(), msg_len);
 
-			listener->m_pLooper->getLTMgr()->getHandler()->handle(bufferevent_getfd(bev), listener->m_pLooper->getBuffer(), msg_len);	
+			listener->m_pLooper->getMgr()->getHandler()->handle(bufferevent_getfd(bev), listener->m_pLooper->getBuffer(), msg_len);	
 			if( msg_len == len ) {
 				break;
 			}
@@ -105,7 +105,7 @@ void	NetListener::event_cb(bufferevent *bev, short events, void *user_data)
 
 	if (events & BEV_EVENT_EOF || events & BEV_EVENT_ERROR) {
 		LOG(TAG_DISPATCHER, "disconnected, linkid=%d", linkid);
-		listener->m_pLooper->getLTMgr()->getLinkMgr()->remove(linkid);
+		listener->m_pLooper->getMgr()->getLinkMgr()->remove(linkid);
 
 	} else if ( events & BEV_EVENT_CONNECTED ) {
 		LOG(TAG_DISPATCHER, "connected, linkid=%d", linkid);		

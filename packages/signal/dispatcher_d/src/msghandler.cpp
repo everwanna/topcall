@@ -40,7 +40,7 @@ void	MsgHandler::onSendReq(int linkid, Unpack* up) {
 		m_pLoginMgr->getLinkMgr()->send(req.peer, up->getBuf(), up->getLen() );
 
 	} else {
-		
+		m_pLoginMgr->getLooper()->sendRouter(up->getBuf(), up->getLen());
 	}
 }
 

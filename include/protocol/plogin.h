@@ -13,6 +13,9 @@ enum {
 	URI_SEND_RES		= 4,
 	URI_SYNCUIDS_REQ	= 5,
 	URI_SYNCUIDS_RES	= 6,
+
+	URI_REGROUTER_REQ	= 100,
+	URI_REGROUTER_RES	= 101
 };
 
 struct PLoginReq : Packet {	
@@ -119,6 +122,39 @@ struct PSyncUidsReq : Packet {
 		for( size_t i=0; i<uids.size(); i++ ) {
 			uids.push_back( uids[i] );
 		}
+	}
+};
+
+
+struct PRegRouterReq : Packet {	
+	enum { uri=URI_REGROUTER_REQ };
+
+	std::string		name;
+
+	virtual void	unmarshall(Unpack& up) {	
+		name = up.popString();
+	}
+
+	virtual void	marshall(Pack& pk) {	
+		pk.pushString(name);
+	}
+};
+
+
+struct PRegRouterRes : Packet {	
+	enum { uri=URI_REGROUTER_RES };
+
+	int				res;
+	std::string		name;
+
+	virtual void	unmarshall(Unpack& up) {	
+		res = up.popInt32();
+		name = up.popString();
+	}
+
+	virtual void	marshall(Pack& pk) {	
+		pk.pushInt32(res);
+		pk.pushString(name);
 	}
 };
 

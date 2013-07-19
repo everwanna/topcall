@@ -6,9 +6,9 @@
 #include "netlink.h"
 #include "netlistener.h"
 
-NetLoop::NetLoop(DispMgr* mgr, const std::string& disp_ip, short disp_port, short port) 
+NetLoop::NetLoop(DispMgr* mgr, const std::string& router_ip, short router_port, short port) 
 	: m_pMgr(mgr)
-	, m_pDispLink(NULL)
+	, m_pRouterLink(NULL)
 {
 #ifdef WIN32
 	WSADATA WSAData;
@@ -21,8 +21,8 @@ NetLoop::NetLoop(DispMgr* mgr, const std::string& disp_ip, short disp_port, shor
 	m_event_base = event_base_new();
 
 	//connect to master link:
-	m_pDispLink = new NetLink(this, "dispatcer_link", disp_ip.c_str(), disp_port);
-	m_pDispLink->connect();
+	m_pRouterLink = new NetLink(this, "dispatcer_link", router_ip.c_str(), router_port);
+	m_pRouterLink->connect();
 
 	//startup tcp listener:
 	m_pListener = new NetListener(this);
@@ -58,11 +58,13 @@ void	NetLoop::run()
 	event_base_dispatch(m_event_base);
 }
 
-void	NetLoop::sendDispatcher(const char* data, int len) {
-	if( m_pDispLink != NULL ) {
-		m_pDispLink->send(data, len);
+void	NetLoop::sendRouter(const char* data, int len) {
+	if( m_pRouterLink != NULL ) {
+		m_pRouterLink->send(data, len);
 	} else {
+		//[TBD]
 		//message lost? should bring down this proxy.
+		LOG(TAG_DISPATCHER, "send dispatcher failed, m_pRouter==NULL.");		
 	}
 }
 

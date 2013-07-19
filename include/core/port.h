@@ -24,6 +24,7 @@
 
 #define PORT_LOGIN		2061
 #define PORT_DISPATCHER	2071
+#define PORT_ROUTER		2081
 
 #endif
 

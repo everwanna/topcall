@@ -22,8 +22,8 @@ int main(int argc, char* argv[])
 	config.port = ini.getInt("dispatcher", "port");
 	config.isp = ini.getInt("dispatcher", "isp");
 	config.area = ini.getInt("dispatcher", "area");
-	config.disp_ip = ini.getString("dispatcher", "disp_ip");
-	config.disp_port = ini.getInt("dispatcher", "disp_port");
+	config.router_ip = ini.getString("router", "disp_ip");
+	config.router_port = ini.getInt("router", "disp_port");
 
 	if( config.name.length() == 0 ||
 		config.ip.length() == 0 ||
@@ -39,8 +39,8 @@ int main(int argc, char* argv[])
 	LOG(TAG_DISPATCHER, "	ip      = %s ", config.ip.c_str());
 	LOG(TAG_DISPATCHER, "	port    = %d ", config.port);
 	LOG(TAG_DISPATCHER, "	area    = %d ", config.area);
-	LOG(TAG_DISPATCHER, "	master_ip   = %s ", config.disp_ip.c_str());
-	LOG(TAG_DISPATCHER, "	master_port = %d ", config.disp_port);
+	LOG(TAG_DISPATCHER, "	router_ip   = %s ", config.router_ip.c_str());
+	LOG(TAG_DISPATCHER, "	router_port = %d ", config.router_port);
 
 	DispMgr* mgr = new DispMgr(config);
 	mgr->run();

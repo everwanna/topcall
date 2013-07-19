@@ -84,7 +84,7 @@ void	NetLink::read_cb(struct bufferevent *bev, void *ctx)
 		if( msg_len <= len ) {
 			evbuffer_remove(src, link->m_pLooper->getBuffer(), msg_len);
 
-			link->m_pLooper->getLTMgr()->getHandler()->handle(bufferevent_getfd(bev), link->m_pLooper->getBuffer(), msg_len);						
+			link->m_pLooper->getMgr()->getHandler()->handle(bufferevent_getfd(bev), link->m_pLooper->getBuffer(), msg_len);						
 			if( msg_len == len ) {
 				break;
 			}

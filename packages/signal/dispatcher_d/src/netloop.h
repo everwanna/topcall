@@ -16,10 +16,10 @@ public:
 
 public:
 	void	run();		
-	void	sendDispatcher(const char* data, int len);
+	void	sendRouter(const char* data, int len);
 
 	int		getSystemTime();
-	DispMgr*	getLTMgr() { return m_pMgr; }	
+	DispMgr*getMgr() { return m_pMgr; }	
 	char*	getBuffer() { return m_pBuffer; }
 	event_base*	getEventBase() { return m_event_base; }
 
@@ -31,7 +31,7 @@ private:
 	DispMgr*	m_pMgr;
 	event_base*	m_event_base;
 
-	NetLink*	m_pDispLink;
+	NetLink*	m_pRouterLink;
 	NetListener*m_pListener;
 	char*		m_pBuffer;
 
