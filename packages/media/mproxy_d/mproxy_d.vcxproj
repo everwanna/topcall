@@ -84,7 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="src\blacklist.cpp" />
     <ClCompile Include="src\msgcache.cpp" />
     <ClCompile Include="src\msgcachemgr.cpp" />
     <ClCompile Include="src\inifile.cpp" />
@@ -100,7 +99,6 @@
     <ClCompile Include="src\uinfo.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\blacklist.h" />
     <ClInclude Include="src\msgcache.h" />
     <ClInclude Include="src\msgcachemgr.h" />
     <ClInclude Include="src\config.h" />

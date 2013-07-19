@@ -12,8 +12,7 @@ public:
 public:
 	void	handle(int linkid, const sockaddr_in* peer_addr, char* msg, int len);
 
-public:
-	void	onMGAllocRes(int linkid, const sockaddr_in* peer_addr, Unpack* up);
+public:	
 	void	onCreateReq(int linkid, const sockaddr_in* peer_addr, Unpack* up);
 	void	onMPJoinReq(int linkid, const sockaddr_in* peer_addr, Unpack* up);
 	void	onMPLeaveReq(int linkid, const sockaddr_in* peer_addr, Unpack* up);

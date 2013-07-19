@@ -40,10 +40,8 @@ void	MsgHandler::handle(int linkid, const sockaddr_in* peer_addr, char* msg, int
 	}
 
 	switch(up.getUri() ) {
-	//case PMGAllocRes::uri:
-	//	onMGAllocRes(linkid, peer_addr, &up);
-	//	break;
 	case PMPCreateReq::uri:
+		onCreateReq(linkid, peer_addr, &up);
 		break;
 	case PMPJoinReq::uri:
 		onMPJoinReq(linkid, peer_addr, &up);
@@ -60,15 +58,6 @@ void	MsgHandler::handle(int linkid, const sockaddr_in* peer_addr, char* msg, int
 		//should consider the blacklist.
 		break;
 	}
-}
-
-void	MsgHandler::onMGAllocRes(int linkid, const sockaddr_in* peer_addr, Unpack* up) {
-	//yes, save the cookie from MGroup, and verify the client based on the cookie.
-	PMGAllocRes res;
-	res.unmarshall(*up);
-
-	LOG(TAG_MPROXY, "MsgHandler::onMGAllocRes, linkid=%d, stream=%s", linkid, res.cookie.c_str());
-	m_pMPMgr->getSessMgr()->createSession(res.stream);
 }
 
 void	MsgHandler::onCreateReq(int linkid, const sockaddr_in* peer_addr, Unpack* up) {
@@ -110,9 +99,9 @@ void	MsgHandler::onMPJoinReq(int linkid, const sockaddr_in* peer_addr, Unpack* u
 		goto exit;
 	} 	
 
-	session = m_pMPMgr->getSessMgr()->getSession(req.stream);
+	session = m_pMPMgr->getSessMgr()->getSession(req.sid);
 	if( session == NULL ) {
-		LOG(TAG_MPROXY, "MsgHandler::onMPJoinReq, session not found for stream=%s.", req.stream.c_str());
+		LOG(TAG_MPROXY, "MsgHandler::onMPJoinReq, session not found for sid=%d, stream=%s.", req.sid, req.stream.c_str());
 		rc = RES_NO_GROUP;
 		goto exit;
 	}
