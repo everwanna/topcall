@@ -35,6 +35,7 @@ extern "C" {
 #define LINK_CHECK_INTERVAL	5
 #define LINK_EXPIRE			15
 #define RECONN_INTERVAL		5
+#define MSG_RESEND_MAX		10
 
 #endif
 

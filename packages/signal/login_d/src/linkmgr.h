@@ -4,10 +4,11 @@
 #include "config.h"
 #include <map>
 
+class LoginMgr;
 struct Link;
 class LinkMgr {
 public:
-	LinkMgr();
+	LinkMgr(LoginMgr* mgr);
 
 public:
 	void	addLink(Link* link);
@@ -22,6 +23,7 @@ public:
 
 private:
 	//linkid=>Link.
+	LoginMgr*	m_pLoginMgr;
 	std::map<int, Link*>	m_mapLinks;
 	std::map<int, int>		m_mapUidLinks;
 };

@@ -86,6 +86,8 @@
     <ClCompile Include="src\loginmgr.cpp" />
     <ClCompile Include="src\mongolink.cpp" />
     <ClCompile Include="src\msghandler.cpp" />
+    <ClCompile Include="src\msglist.cpp" />
+    <ClCompile Include="src\msgresender.cpp" />
     <ClCompile Include="src\netlink.cpp" />
     <ClCompile Include="src\netlistener.cpp" />
     <ClCompile Include="src\netloop.cpp" />
@@ -99,7 +101,10 @@
     <ClInclude Include="src\loginconfig.h" />
     <ClInclude Include="src\loginmgr.h" />
     <ClInclude Include="src\mongolink.h" />
+    <ClInclude Include="src\msg.h" />
     <ClInclude Include="src\msghandler.h" />
+    <ClInclude Include="src\msglist.h" />
+    <ClInclude Include="src\msgresender.h" />
     <ClInclude Include="src\netlink.h" />
     <ClInclude Include="src\netlistener.h" />
     <ClInclude Include="src\netloop.h" />

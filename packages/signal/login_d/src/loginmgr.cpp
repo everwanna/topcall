@@ -4,16 +4,18 @@
 #include "linkmgr.h"
 #include "mongolink.h"
 #include "uinfomgr.h"
+#include "msgresender.h"
 
 LoginMgr::LoginMgr(const LoginConfig& config)
 	: m_config(config)
 {
 	m_pLooper = new NetLoop(this, m_config.disp_ip, m_config.disp_port, m_config.port);
 	m_pHandler = new MsgHandler(this);
-	m_pLinkMgr = new LinkMgr();
+	m_pLinkMgr = new LinkMgr(this);
 	m_pMongo = new MongoLink();
 	m_pMongo->connect( m_config.udb_ip, m_config.udb_port);
 	m_pUInfoMgr = new UInfoMgr();
+	m_pResender = new MsgResender(this);
 
 	m_nSeq = 0;
 }
