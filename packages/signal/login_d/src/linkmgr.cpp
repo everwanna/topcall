@@ -97,3 +97,13 @@ void	LinkMgr::sendByUid(int uid, const char* msg, int len) {
 bool	LinkMgr::hasUid(int uid) {
 	return m_mapUidLinks.find(uid) != m_mapUidLinks.end();
 }
+
+bool	LinkMgr::check(int uid, int linkid) {
+	std::map<int, int>::iterator it = m_mapUidLinks.find(uid);
+	if( it == m_mapUidLinks.end() ) {
+		return false;
+	}
+
+	return it->second==linkid;
+}
+

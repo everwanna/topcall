@@ -79,6 +79,13 @@ void	MsgHandler::onSendReq(int linkid, Unpack* up) {
 	req.unmarshall(*up);
 
 	LOG(TAG_LOGIN, "send msg to from %d to peer %d, with seq=.", req.uid, req.peer, req.seq);
+	//verify the uid is from the right link:
+	if( !m_pLoginMgr->getLinkMgr()->check( req.uid, linkid) ) {
+		LOG(TAG_LOGIN, "uid and linkid doesn't match, uid=%d, linkid=%d.", req.uid, linkid);
+		return;
+	}
+
+	//send the request:
 	if( m_pLoginMgr->getLinkMgr()->hasUid(req.peer) ) {
 		//best scenario, uid/peer on the same proxy:
 		m_pLoginMgr->getLinkMgr()->sendByUid(req.peer, up->getBuf(), up->getLen());

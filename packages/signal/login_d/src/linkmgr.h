@@ -18,6 +18,7 @@ public:
 	void	setUid(int uid, int linkid);
 	void	sendByUid(int uid, const char* msg, int len);
 	bool	hasUid(int uid);
+	bool	check(int uid, int linkid);
 
 private:
 	//linkid=>Link.
