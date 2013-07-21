@@ -15,6 +15,7 @@ public:
 	UInfo*	get(int uid);
 
 private:
+	//uid=>UInfo map:
 	std::map<int, UInfo*>	m_mapUInfos;
 };
 

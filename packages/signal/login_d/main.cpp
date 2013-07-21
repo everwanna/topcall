@@ -22,10 +22,10 @@ int main(int argc, char* argv[])
 	config.port = ini.getInt("login", "port");
 	config.isp = ini.getInt("login", "isp");
 	config.area = ini.getInt("login", "area");
-	config.disp_ip = ini.getString("login", "disp_ip");
-	config.disp_port = ini.getInt("login", "disp_port");
-	config.udb_ip = ini.getString("login", "udb_ip");
-	config.udb_port = ini.getInt("login", "udb_port");
+	config.disp_ip = ini.getString("dispatcher", "ip");
+	config.disp_port = ini.getInt("dispatcher", "port");
+	config.udb_ip = ini.getString("udb", "ip");
+	config.udb_port = ini.getInt("udb", "port");
 
 	if( config.name.length() == 0 ||
 		config.ip.length() == 0 ||

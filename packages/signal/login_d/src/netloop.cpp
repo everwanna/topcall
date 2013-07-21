@@ -21,8 +21,8 @@ NetLoop::NetLoop(LoginMgr* mgr, const std::string& disp_ip, short disp_port, sho
 	m_event_base = event_base_new();
 
 	//connect to master link:
-	m_pDispLink = new NetLink(this, "dispatcer_link", disp_ip.c_str(), disp_port);
-	m_pDispLink->connect();
+	//m_pDispLink = new NetLink(this, "dispatcer_link", disp_ip.c_str(), disp_port);
+	//m_pDispLink->connect();
 
 	//startup tcp listener:
 	m_pListener = new NetListener(this);
@@ -62,7 +62,8 @@ void	NetLoop::sendDispatcher(const char* data, int len) {
 	if( m_pDispLink != NULL ) {
 		m_pDispLink->send(data, len);
 	} else {
-		//message lost? should bring down this proxy.
+		//[TBD] message lost? should bring down this proxy.
+		LOG(TAG_LOGIN, "send dispatcher failed, m_pDispLink==NULL.");
 	}
 }
 
