@@ -15,7 +15,7 @@ NetLink::NetLink(NetLoop* loop, const std::string& name, const std::string& ip, 
 }
 
 void	NetLink::connect() {
-	LOG(TAG_DISPATCHER, "connect %s, ip/port=%s, %d", m_strName.c_str(), m_strIp.c_str(), m_nPort);
+	LOG(TAG_ROUTER, "connect %s, ip/port=%s, %d", m_strName.c_str(), m_strIp.c_str(), m_nPort);
 
 	memset(&m_addr, 0, sizeof(m_addr));
 	m_addr.sin_family = AF_INET;
@@ -26,7 +26,7 @@ void	NetLink::connect() {
 	bufferevent_enable(m_pEvent, EV_READ|EV_WRITE);
 
 	bufferevent_socket_connect(m_pEvent, (sockaddr*)&m_addr, sizeof(m_addr));
-	LOG(TAG_DISPATCHER, "connect %s, linkid=%d", m_strName.c_str(), bufferevent_getfd(m_pEvent) );
+	LOG(TAG_ROUTER, "connect %s, linkid=%d", m_strName.c_str(), bufferevent_getfd(m_pEvent) );
 }
 
 void	NetLink::send(const char* msg, int len) 
@@ -44,7 +44,7 @@ void	NetLink::close() {
 }
 
 void	NetLink::startReconn() {
-	LOG(TAG_DISPATCHER, "start reconnect %s, ip=%s, port=%d.", m_strName.c_str(), m_strIp.c_str(), m_nPort);
+	LOG(TAG_ROUTER, "start reconnect %s, ip=%s, port=%d.", m_strName.c_str(), m_strIp.c_str(), m_nPort);
 	timeval tm;
 	tm.tv_sec = RECONN_INTERVAL;
 	tm.tv_usec = 0;
@@ -75,7 +75,7 @@ void	NetLink::read_cb(struct bufferevent *bev, void *ctx)
 	while(true) {
 		len = evbuffer_get_length(src);	
 		if( len <= 4 ) {
-			LOG(TAG_DISPATCHER, "NetLink::read_cb, len<=4");	
+			LOG(TAG_ROUTER, "NetLink::read_cb, len<=4");	
 			break;
 		}
 
@@ -90,7 +90,7 @@ void	NetLink::read_cb(struct bufferevent *bev, void *ctx)
 			}
 		} else {
 			//not enough data again, return.
-			LOG(TAG_DISPATCHER, "NetLoop::read_cb, not enough data, waiting. msg_len=%d, len=%d", msg_len, len);	
+			LOG(TAG_ROUTER, "NetLoop::read_cb, not enough data, waiting. msg_len=%d, len=%d", msg_len, len);	
 			break;
 		}
 	}
@@ -107,12 +107,12 @@ void	NetLink::event_cb(bufferevent *bev, short events, void *user_data)
 	int linkid = bufferevent_getfd(bev);
 
 	if (events & BEV_EVENT_ERROR || events & BEV_EVENT_EOF ) {
-		LOG(TAG_DISPATCHER, "%s disconnected, linkid=%d", link->m_strName.c_str(), linkid);
+		LOG(TAG_ROUTER, "%s disconnected, linkid=%d", link->m_strName.c_str(), linkid);
 		link->close();
 		link->stopReconn();
 		link->startReconn();
 	} else if( events&BEV_EVENT_CONNECTED ) {
-		LOG(TAG_DISPATCHER, "%s connected, linkid=%d, ip=%s, port=%d", link->m_strName.c_str(), linkid, link->m_strIp.c_str(), link->m_nPort);
+		LOG(TAG_ROUTER, "%s connected, linkid=%d, ip=%s, port=%d", link->m_strName.c_str(), linkid, link->m_strIp.c_str(), link->m_nPort);
 		link->stopReconn();
 
 		//register the router:

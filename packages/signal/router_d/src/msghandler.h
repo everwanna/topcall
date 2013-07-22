@@ -13,11 +13,12 @@ public:
 	void	handle(int linkid, char* msg, int len);
 
 public:
+	void	onRegDispReq(int linkid, Unpack* up);
 	void	onRegRouterReq(int linkid, Unpack* up);
 	void	onSendReq(int linkid, Unpack* up);
 
 private:
-	RouteMgr*	m_pLoginMgr;
+	RouteMgr*	m_pMgr;
 	char*		m_pBuffer;
 };
 

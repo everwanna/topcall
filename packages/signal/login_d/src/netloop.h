@@ -19,7 +19,7 @@ public:
 	int		sendDispatcher(const char* data, int len);
 
 	int		getSystemTime();
-	LoginMgr*	getLTMgr() { return m_pMgr; }	
+	LoginMgr*	getMgr() { return m_pMgr; }	
 	char*	getBuffer() { return m_pBuffer; }
 	event_base*	getEventBase() { return m_event_base; }
 

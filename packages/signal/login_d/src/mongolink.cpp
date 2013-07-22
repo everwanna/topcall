@@ -55,6 +55,19 @@ UInfo*	MongoLink::query(const std::string& passport) {
 		if ( bson_find( iterator, mongo_cursor_bson( cursor ), "password" ) != BSON_EOO ) {
 			uinfo->password= bson_iterator_string( iterator );
 		}		
+
+		if ( bson_find( iterator, mongo_cursor_bson( cursor ), "router" ) != BSON_EOO ) {
+			uinfo->router= bson_iterator_string( iterator );
+		}		
+
+		if ( bson_find( iterator, mongo_cursor_bson( cursor ), "dispatcher" ) != BSON_EOO ) {
+			uinfo->dispatcher= bson_iterator_string( iterator );
+		}	
+
+		if ( bson_find( iterator, mongo_cursor_bson( cursor ), "proxy" ) != BSON_EOO ) {
+			uinfo->proxy= bson_iterator_string( iterator );
+		}	
+
 	} else {
 		LOG(TAG_LOGIN, "query passport failed, passport=%s", passport.c_str());
 	}

@@ -7,9 +7,9 @@ struct LoginConfig {
 	std::string name;
 	std::string ip;
 	int		port;
+	int		seq_high;
 	int		isp;
 	int		area;
-
 
 	std::string	disp_ip;
 	short		disp_port;

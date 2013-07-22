@@ -13,6 +13,7 @@ public:
 	void	handle(int linkid, char* msg, int len);
 
 public:
+	void	onRegProxyRes(int linkid, Unpack* up);
 	void	onLoginReq(int linkid, Unpack* up);
 	void	onSendReq(int linkid, Unpack* up);
 

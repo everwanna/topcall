@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 
 	IniFile ini(inifile);
 	if( ini.load() != 0 ) {
-		LOG(TAG_DISPATCHER, "router_d, fail to open %s.", inifile);
+		LOG(TAG_ROUTER, "router_d, fail to open %s.", inifile);
 		return -1;
 	}
 
@@ -36,18 +36,18 @@ int main(int argc, char* argv[])
 		config.port == 0 ||
 		config.isp == 0 ||
 		config.area == 0) {
-		LOG(TAG_DISPATCHER, "router_d, the config file is invalid.");
+		LOG(TAG_ROUTER, "router_d, the config file is invalid.");
 		return -1;
 	}
 
-	LOG(TAG_DISPATCHER, "router_d, running at configuration: ");
-	LOG(TAG_DISPATCHER, "	name    = %s ", config.name.c_str());
-	LOG(TAG_DISPATCHER, "	ip      = %s ", config.ip.c_str());
-	LOG(TAG_DISPATCHER, "	port    = %d ", config.port);
-	LOG(TAG_DISPATCHER, "	area    = %d ", config.area);
+	LOG(TAG_ROUTER, "router_d, running at configuration: ");
+	LOG(TAG_ROUTER, "	name    = %s ", config.name.c_str());
+	LOG(TAG_ROUTER, "	ip      = %s ", config.ip.c_str());
+	LOG(TAG_ROUTER, "	port    = %d ", config.port);
+	LOG(TAG_ROUTER, "	area    = %d ", config.area);
 
-	LOG(TAG_DISPATCHER, "	router1 = %s ", config.router1_ip.c_str());
-	LOG(TAG_DISPATCHER, "	router1 = %d ", config.router1_port);
+	LOG(TAG_ROUTER, "	router1 = %s ", config.router1_ip.c_str());
+	LOG(TAG_ROUTER, "	router1 = %d ", config.router1_port);
 
 	RouteMgr* mgr = new RouteMgr(config);
 	mgr->run();

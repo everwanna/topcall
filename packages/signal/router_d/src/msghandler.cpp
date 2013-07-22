@@ -8,7 +8,7 @@
 using namespace login;
 
 MsgHandler::MsgHandler(RouteMgr* mgr) 
-	: m_pLoginMgr(mgr)
+	: m_pMgr(mgr)
 {
 	m_pBuffer = new char[1024];
 }
@@ -24,6 +24,9 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 	up.popHead();
 
 	switch( up.getUri() ) {
+	case URI_REGDISP_REQ:
+		onRegDispReq(linkid, &up);
+		break;
 	case URI_REGROUTER_REQ:
 		onRegRouterReq(linkid, &up);
 		break;
@@ -33,33 +36,49 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 	}
 }
 
+void	MsgHandler::onRegDispReq(int linkid, Unpack* up) {
+	PRegDispReq req;
+	req.unmarshall(*up);
+
+	LOG(TAG_ROUTER, "reg disp req, dispatcher=%s", req.dispatcher.c_str());
+	PRegDispRes res;
+	res.dispatcher = req.dispatcher;
+	res.router = m_pMgr->getConfig()->name;
+
+	Pack pk(SVID_LOGIN, PRegDispRes::uri);
+	res.marshall(pk);
+	pk.pack();
+
+	m_pMgr->getLinkMgr()->send( linkid, pk.getBuf(), pk.getLen() );
+}
+
 void	MsgHandler::onRegRouterReq(int linkid, Unpack* up) {
 	PRegRouterReq req;
 	req.unmarshall(*up);
 
-	LOG(TAG_DISPATCHER, "router register, name=%s", req.name.c_str());
-	m_pLoginMgr->getRouterLinkMgr()->set(req.name, linkid);	
+	LOG(TAG_ROUTER, "router register, name=%s", req.name.c_str());
+	m_pMgr->getRouterLinkMgr()->set(req.name, linkid);	
 }
 
 void	MsgHandler::onSendReq(int linkid, Unpack* up) {
 	PSendReq req;
 	req.unmarshall(*up);
 
-	LOG(TAG_DISPATCHER, "send from uid %d to peer %d", req.uid, req.peer);
-	if( m_pLoginMgr->getLinkMgr()->hasUid(req.peer) ) {
+	LOG(TAG_ROUTER, "send from uid %d to peer %d", req.uid, req.peer);
+	if( m_pMgr->getLinkMgr()->hasUid(req.peer) ) {
 		//if we already know where to send:
-		m_pLoginMgr->getLinkMgr()->send(req.peer, up->getBuf(), up->getLen() );
+		m_pMgr->getLinkMgr()->send(req.peer, up->getBuf(), up->getLen() );
 
 	} else {
 		//query the online db, and send:
 		std::string router = "";
-		int linkid = m_pLoginMgr->getRouterLinkMgr()->get(router);
+		int linkid = m_pMgr->getRouterLinkMgr()->get(router);
 		if( linkid <= 0 ) {
-			LOG(TAG_DISPATCHER, "MsgHandler::onSendReq, dispatcher doesn't exist, name=%s", router);
+			LOG(TAG_ROUTER, "MsgHandler::onSendReq, dispatcher doesn't exist, name=%s", router);
 			return;
 		}
 
-		m_pLoginMgr->getLinkMgr()->send(linkid, up->getBuf(), up->getLen());
+		m_pMgr->getLinkMgr()->send(linkid, up->getBuf(), up->getLen());
 	}
 }
 

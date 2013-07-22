@@ -19,6 +19,10 @@ public:
 	void		onTimer();
 
 public:
+	void		setRouter(const std::string& router) { m_strRouter = router; }
+	std::string getRouter() { return m_strRouter; }
+
+public:
 	inline NetLoop*		getLooper() { return m_pLooper; }
 	inline MsgHandler*	getHandler() { return m_pHandler; }	
 	inline LTable*		getLTable() { return m_pLTable; }
@@ -34,6 +38,7 @@ private:
 	SlaveMgr*	m_pSlaveMgr;
 	DispConfig	m_config;
 	int			m_nSeq;
+	std::string m_strRouter;
 };
 
 #endif

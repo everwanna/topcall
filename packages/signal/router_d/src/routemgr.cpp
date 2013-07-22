@@ -36,16 +36,16 @@ RouteMgr::~RouteMgr() {
 }
 
 void	RouteMgr::run() {
-	LOG(TAG_DISPATCHER, "route_d, running now....");
+	LOG(TAG_ROUTER, "route_d, running now....");
 	m_pLooper->run();
-	LOG(TAG_DISPATCHER, "route_d, exiting now....");
+	LOG(TAG_ROUTER, "route_d, exiting now....");
 }
 
 void	RouteMgr::onTimer() {
 	//clean the groups with no heartbeat for 5 seconds:
 	int time = m_pLooper->getSystemTime();
 	if( time == 0 ) {
-		LOG(TAG_DISPATCHER, "RouteMgr::onTimer, invalid time==0.");
+		LOG(TAG_ROUTER, "RouteMgr::onTimer, invalid time==0.");
 		return; 
 	}
 

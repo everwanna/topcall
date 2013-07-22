@@ -15,7 +15,7 @@ NetListener::~NetListener() {
 }
 
 void	NetListener::listen(short port) {
-	LOG(TAG_DISPATCHER, "router listener on port=%d", port);
+	LOG(TAG_ROUTER, "router listener on port=%d", port);
 	//startup tcp listener:
 	struct sockaddr_in sin;
 	memset(&sin, 0, sizeof(sin));
@@ -36,7 +36,7 @@ void	NetListener::listener_cb(evconnlistener *listener, evutil_socket_t fd, sock
 
 	bev = bufferevent_socket_new(nl->m_pLooper->getEventBase(), fd, BEV_OPT_CLOSE_ON_FREE);
 	if (!bev) {
-		LOG(TAG_DISPATCHER, "NetLoop::listener_cb, fail on bufferevent_socket_new.");
+		LOG(TAG_ROUTER, "NetLoop::listener_cb, fail on bufferevent_socket_new.");
 		event_base_loopbreak(nl->m_pLooper->getEventBase());
 		return;
 	}
@@ -52,7 +52,7 @@ void	NetListener::listener_cb(evconnlistener *listener, evutil_socket_t fd, sock
 	link->closed = false;
 	nl->m_pLooper->getMgr()->getLinkMgr()->addLink(link);
 
-	LOG(TAG_DISPATCHER, "connect from linkid=%d, ip/port=%s, %d", linkid, inet_ntoa(addr->sin_addr), addr->sin_port);
+	LOG(TAG_ROUTER, "connect from linkid=%d, ip/port=%s, %d", linkid, inet_ntoa(addr->sin_addr), addr->sin_port);
 }
 
 void	NetListener::read_cb(struct bufferevent *bev, void *ctx)
@@ -72,7 +72,7 @@ void	NetListener::read_cb(struct bufferevent *bev, void *ctx)
 	while(true) {
 		len = evbuffer_get_length(src);	
 		if( len <= 4 ) {
-			LOG(TAG_DISPATCHER, "NetLoop::read_cb, len<=4, len=%d", len);	
+			LOG(TAG_ROUTER, "NetLoop::read_cb, len<=4, len=%d", len);	
 			break;
 		}
 
@@ -88,7 +88,7 @@ void	NetListener::read_cb(struct bufferevent *bev, void *ctx)
 			}
 		} else {
 			//not enough data again, return.
-			LOG(TAG_DISPATCHER, "NetLoop::read_cb, not enough data, waiting. msg_len=%d, len=%d", msg_len, len);	
+			LOG(TAG_ROUTER, "NetLoop::read_cb, not enough data, waiting. msg_len=%d, len=%d", msg_len, len);	
 			break;
 		}
 	}
@@ -105,10 +105,10 @@ void	NetListener::event_cb(bufferevent *bev, short events, void *user_data)
 	int linkid = bufferevent_getfd(bev);
 
 	if (events & BEV_EVENT_EOF || events & BEV_EVENT_ERROR) {
-		LOG(TAG_DISPATCHER, "disconnected, linkid=%d", linkid);
+		LOG(TAG_ROUTER, "disconnected, linkid=%d", linkid);
 		listener->m_pLooper->getMgr()->getLinkMgr()->remove(linkid);
 
 	} else if ( events & BEV_EVENT_CONNECTED ) {
-		LOG(TAG_DISPATCHER, "connected, linkid=%d", linkid);		
+		LOG(TAG_ROUTER, "connected, linkid=%d", linkid);		
 	}
 }

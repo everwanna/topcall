@@ -22,8 +22,8 @@ int main(int argc, char* argv[])
 	config.port = ini.getInt("dispatcher", "port");
 	config.isp = ini.getInt("dispatcher", "isp");
 	config.area = ini.getInt("dispatcher", "area");
-	config.router_ip = ini.getString("router", "disp_ip");
-	config.router_port = ini.getInt("router", "disp_port");
+	config.router_ip = ini.getString("router", "ip");
+	config.router_port = ini.getInt("router", "port");
 
 	if( config.name.length() == 0 ||
 		config.ip.length() == 0 ||

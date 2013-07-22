@@ -114,6 +114,16 @@ void	NetLink::event_cb(bufferevent *bev, short events, void *user_data)
 	} else if( events&BEV_EVENT_CONNECTED ) {
 		LOG(TAG_DISPATCHER, "%s connected, linkid=%d, ip=%s, port=%d", link->m_strName.c_str(), linkid, link->m_strIp.c_str(), link->m_nPort);
 		link->stopReconn();
+
+		//register with router:
+		login::PRegDispReq req;
+		req.dispatcher = link->m_pLooper->getMgr()->getConfig()->name;
+
+		Pack pk(SVID_LOGIN, login::PRegDispReq::uri);
+		req.marshall(pk);
+		pk.pack();
+
+		link->send( pk.getBuf(), pk.getLen() );
 	}
 }
 

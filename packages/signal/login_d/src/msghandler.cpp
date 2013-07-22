@@ -28,6 +28,9 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 	up.popHead();
 
 	switch(up.getUri() ) {
+	case URI_REGPROXY_RES:
+		onRegProxyRes(linkid, &up);
+		break;
 	case URI_LOGIN_REQ:
 		onLoginReq(linkid, &up);
 		break;
@@ -35,6 +38,19 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 		onSendReq(linkid, &up);
 		break;
 	}
+}
+
+void	MsgHandler::onRegProxyRes(int linkid, Unpack* up) {
+	PRegProxyRes res;
+	res.unmarshall(*up);
+
+	LOG(TAG_LOGIN, "reg proxy res, dispatcher=%s, router=%s", res.dispatcher.c_str(), res.router.c_str());
+	if( res.proxy != m_pLoginMgr->getConfig()->name ) {
+		LOG(TAG_LOGIN, "MsgHandler::onRegProxyRes, proxy != config.name. proxy=%s, config.name=%s", res.proxy.c_str(), m_pLoginMgr->getConfig()->name.c_str());
+	}
+
+	m_pLoginMgr->setRouter(res.router);
+	m_pLoginMgr->setDispatcher(res.dispatcher);
 }
 
 void	MsgHandler::onLoginReq(int linkid, Unpack* up) {
@@ -49,6 +65,31 @@ void	MsgHandler::onLoginReq(int linkid, Unpack* up) {
 	//cache first:
 	if( req.uid != 0 ) {
 		uinfo = m_pLoginMgr->getUInfoMgr()->get(req.uid);
+		if( uinfo == NULL ) {
+			//uid !=0, user reconnect, but we have no info here in this proxy. That means user logon other proxy before.
+			//need to notify the other proxy:
+			LOG(TAG_LOGIN, "user logon other proxy before, uid=%d.", req.uid);
+			uinfo = m_pLoginMgr->getMongo()->query(req.passport);
+			if( uinfo == NULL ) {
+				//uid!=0, mongo db empty, how?
+				LOG(TAG_LOGIN, "wired, no login record for uid=%d", req.uid);
+			} else {
+				//notify that proxy, the user has logon another proxy.
+				//[TBD]
+				PMutiLoginNotify notify;	
+				notify.old_router = uinfo->router;
+				notify.old_dispatcher = uinfo->dispatcher;
+				notify.old_proxy = uinfo->proxy;
+				notify.new_router = m_pLoginMgr->getRouter();
+				notify.new_dispatcher = m_pLoginMgr->getDispatcher();
+				notify.new_proxy = m_pLoginMgr->getConfig()->name;
+
+				Pack mpk(SVID_LOGIN, PMutiLoginNotify::uri);
+				notify.marshall(mpk);
+				mpk.pack();
+				m_pLoginMgr->getLooper()->sendDispatcher( mpk.getBuf(), mpk.getLen() );
+			}
+		}
 	} else {
 		//mongodb next:
 		uinfo = m_pLoginMgr->getMongo()->query(req.passport);

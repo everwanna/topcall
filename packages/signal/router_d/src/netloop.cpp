@@ -19,7 +19,7 @@ NetLoop::NetLoop(RouteMgr* mgr,
 	WSAStartup(0x101, &WSAData);
 #else
 	if (signal(SIGHUP, SIG_IGN) == SIG_ERR) {
-		LOG(TAG_DISPATCHER, "ignore SIGHUP failed.");
+		LOG(TAG_ROUTER, "ignore SIGHUP failed.");
 	}
 #endif
 	m_event_base = event_base_new();

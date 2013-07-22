@@ -28,7 +28,7 @@ extern "C" {
 	#include <event2/bufferevent.h>
 }
 
-#define TAG_DISPATCHER		"dispatcher - "
+#define TAG_ROUTER		"dispatcher - "
 #define NET_BUFFER_SIZE		1024*128
 #define TIMER_INTERVAL		1
 #define LINK_CHECK_INTERVAL	5

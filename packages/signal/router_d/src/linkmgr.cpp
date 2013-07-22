@@ -10,7 +10,7 @@ void	LinkMgr::addLink(Link* link) {
 	if( it == m_mapLinks.end() ) {
 		m_mapLinks[ link->linkid] = link;
 	} else {
-		LOG(TAG_DISPATCHER, "LinkMgr::addLink, linkid exists, linkid=%d", link->linkid);
+		LOG(TAG_ROUTER, "LinkMgr::addLink, linkid exists, linkid=%d", link->linkid);
 		return;
 	}
 }
@@ -34,7 +34,7 @@ void	LinkMgr::remove(int linkid) {
 void	LinkMgr::send(int linkid, const char* msg, int len) {
 	std::map<int, Link*>::iterator it = m_mapLinks.find(linkid);
 	if( it == m_mapLinks.end() ) {
-		LOG(TAG_DISPATCHER, "LinkMgr::send, find linkid failed, linked=%d", linkid);
+		LOG(TAG_ROUTER, "LinkMgr::send, find linkid failed, linked=%d", linkid);
 		return;
 	}
 
@@ -44,7 +44,7 @@ void	LinkMgr::send(int linkid, const char* msg, int len) {
 void	LinkMgr::update(int linkid, int stamp) {
 	std::map<int, Link*>::iterator it = m_mapLinks.find(linkid);
 	if( it == m_mapLinks.end() ) {
-		LOG(TAG_DISPATCHER, "LinkMgr::update, find linkid failed, linked=%d", linkid);
+		LOG(TAG_ROUTER, "LinkMgr::update, find linkid failed, linked=%d", linkid);
 		return;
 	}
 
@@ -60,7 +60,7 @@ void	LinkMgr::removeExpire(int time) {
 
 		if( link->stamp + LINK_EXPIRE < time ) {
 			//it's expired:
-			LOG(TAG_DISPATCHER, "LinkMgr::clearExpire, link expired, linkid/stamp/now=%d,%d,%d", link->linkid, link->stamp, time);
+			LOG(TAG_ROUTER, "LinkMgr::clearExpire, link expired, linkid/stamp/now=%d,%d,%d", link->linkid, link->stamp, time);
 			links.push_back( link->linkid );
 		}
 	}
@@ -76,7 +76,7 @@ void	LinkMgr::setUid(int uid, int linkid) {
 	//verify the linkid exists:
 	std::map<int, Link*>::iterator it = m_mapLinks.find(linkid);
 	if( it == m_mapLinks.end() )  {
-		LOG(TAG_DISPATCHER, "linkid for uid doesn't exist, linkid=%d, uid=%d.", linkid, uid);
+		LOG(TAG_ROUTER, "linkid for uid doesn't exist, linkid=%d, uid=%d.", linkid, uid);
 		return;
 	}
 
@@ -87,7 +87,7 @@ void	LinkMgr::setUid(int uid, int linkid) {
 void	LinkMgr::sendByUid(int uid, const char* msg, int len) {
 	std::map<int, int>::iterator it = m_mapUidLinks.find(uid);
 	if( it == m_mapUidLinks.end() ) {
-		LOG(TAG_DISPATCHER, "send with invalid uid=%d", uid);
+		LOG(TAG_ROUTER, "send with invalid uid=%d", uid);
 		return;
 	}
 

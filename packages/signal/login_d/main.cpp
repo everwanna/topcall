@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
 	config.name = ini.getString("login", "name");
 	config.ip = ini.getString("login", "ip");
 	config.port = ini.getInt("login", "port");
+	config.seq_high = ini.getInt("login", "seq_high");
 	config.isp = ini.getInt("login", "isp");
 	config.area = ini.getInt("login", "area");
 	config.disp_ip = ini.getString("dispatcher", "ip");

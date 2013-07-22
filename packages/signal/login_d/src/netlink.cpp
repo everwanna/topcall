@@ -26,7 +26,7 @@ void	NetLink::connect() {
 	m_addr.sin_addr.s_addr = inet_addr(m_strIp.c_str());
 	m_pEvent = bufferevent_socket_new( m_pLooper->getEventBase(), -1, BEV_OPT_CLOSE_ON_FREE);
 	bufferevent_setcb(m_pEvent, read_cb, write_cb, event_cb, this);
-	bufferevent_enable(m_pEvent, EV_READ|EV_WRITE);
+	bufferevent_enable(m_pEvent, EV_READ);
 
 	bufferevent_socket_connect(m_pEvent, (sockaddr*)&m_addr, sizeof(m_addr));
 	LOG(TAG_LOGIN, "connect %s, linkid=%d", m_strName.c_str(), bufferevent_getfd(m_pEvent) );
@@ -93,7 +93,7 @@ void	NetLink::read_cb(struct bufferevent *bev, void *ctx)
 		if( msg_len <= len ) {
 			evbuffer_remove(src, link->m_pLooper->getBuffer(), msg_len);
 
-			link->m_pLooper->getLTMgr()->getHandler()->handle(bufferevent_getfd(bev), link->m_pLooper->getBuffer(), msg_len);						
+			link->m_pLooper->getMgr()->getHandler()->handle(bufferevent_getfd(bev), link->m_pLooper->getBuffer(), msg_len);						
 			if( msg_len == len ) {
 				break;
 			}
@@ -123,6 +123,15 @@ void	NetLink::event_cb(bufferevent *bev, short events, void *user_data)
 	} else if( events&BEV_EVENT_CONNECTED ) {
 		LOG(TAG_LOGIN, "%s connected, linkid=%d, ip=%s, port=%d", link->m_strName.c_str(), linkid, link->m_strIp.c_str(), link->m_nPort);
 		link->stopReconn();
+
+		//only one link to dispatcher, send reg for simplify:
+		login::PRegProxyReq req;
+		req.proxy = link->m_pLooper->getMgr()->getConfig()->name;
+		Pack pk(SVID_LOGIN, login::PRegProxyReq::uri);
+		req.marshall(pk);
+		pk.pack();
+
+		link->send( pk.getBuf(), pk.getLen() );
 	}
 }
 
