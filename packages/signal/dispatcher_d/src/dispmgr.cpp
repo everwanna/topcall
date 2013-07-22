@@ -26,9 +26,9 @@ DispMgr::~DispMgr() {
 }
 
 void	DispMgr::run() {
-	LOG(TAG_DISPATCHER, "login_d, running now....");
+	LOG(TAG_DISPATCHER, "dispatcher_d, running now....");
 	m_pLooper->run();
-	LOG(TAG_DISPATCHER, "login_d, exiting now....");
+	LOG(TAG_DISPATCHER, "dispatcher_d, exiting now....");
 }
 
 void	DispMgr::onTimer() {

@@ -26,7 +26,7 @@ void	NetLink::connect() {
 	bufferevent_enable(m_pEvent, EV_READ|EV_WRITE);
 
 	bufferevent_socket_connect(m_pEvent, (sockaddr*)&m_addr, sizeof(m_addr));
-	LOG(TAG_DISPATCHER, "connect %s, linkid=%d", m_strName.c_str(), bufferevent_getfd(m_pEvent) );
+	//LOG(TAG_DISPATCHER, "connect %s, linkid=%d", m_strName.c_str(), bufferevent_getfd(m_pEvent) );
 }
 
 void	NetLink::send(const char* msg, int len) 

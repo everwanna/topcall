@@ -14,8 +14,6 @@ LoginMgr::LoginMgr(const LoginConfig& config)
 	m_pLinkMgr = new LinkMgr(this);
 
 	m_pMongo = new MongoLink();
-	m_pMongo->connect( m_config.udb_ip, m_config.udb_port);
-
 	m_pUInfoMgr = new UInfoMgr();
 	m_pResender = new MsgResender(this);
 
@@ -42,9 +40,16 @@ LoginMgr::~LoginMgr() {
 }
 
 void	LoginMgr::run() {
-	LOG(TAG_LOGIN, "login_d, running now....");
+	LOG(TAG_LOGIN, "login_d running now....");
+	int ret = 0;
+
+	ret = m_pMongo->connect( m_config.udb_ip, m_config.udb_port);
+	if( ret != 0 ) {
+		LOG(TAG_LOGIN, "mongo connect failed, please check the login_d.ini for mongo ip&port.");
+		return;
+	}
 	m_pLooper->run();
-	LOG(TAG_LOGIN, "login_d, exiting now....");
+	LOG(TAG_LOGIN, "login_d exiting now....");
 }
 
 void	LoginMgr::onTimer() {

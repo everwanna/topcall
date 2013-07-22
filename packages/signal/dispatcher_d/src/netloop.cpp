@@ -21,7 +21,7 @@ NetLoop::NetLoop(DispMgr* mgr, const std::string& router_ip, short router_port, 
 	m_event_base = event_base_new();
 
 	//connect to master link:
-	m_pRouterLink = new NetLink(this, "dispatcer_link", router_ip.c_str(), router_port);
+	m_pRouterLink = new NetLink(this, "router_link", router_ip.c_str(), router_port);
 	m_pRouterLink->connect();
 
 	//startup tcp listener:

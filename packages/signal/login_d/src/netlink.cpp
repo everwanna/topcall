@@ -14,6 +14,9 @@ NetLink::NetLink(NetLoop* loop, const std::string& name, const std::string& ip, 
 {
 }
 
+NetLink::~NetLink() {
+}
+
 void	NetLink::connect() {
 	LOG(TAG_LOGIN, "connect %s, ip/port=%s, %d", m_strName.c_str(), m_strIp.c_str(), m_nPort);
 
