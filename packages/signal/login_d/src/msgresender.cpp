@@ -7,6 +7,9 @@ MsgResender::MsgResender(LoginMgr* mgr)
 {
 }
 
+MsgResender::~MsgResender() {
+}
+
 void	MsgResender::add(int uid, int seq, const std::string& payload) {
 	std::map<int, MsgList*>::iterator it = m_mapUidMsgs.find(uid);
 	MsgList* mlist = NULL;

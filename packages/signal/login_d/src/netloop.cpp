@@ -66,12 +66,13 @@ void	NetLoop::run()
 	event_base_dispatch(m_event_base);
 }
 
-void	NetLoop::sendDispatcher(const char* data, int len) {
+int		NetLoop::sendDispatcher(const char* data, int len) {
 	if( m_pDispLink != NULL ) {
-		m_pDispLink->send(data, len);
+		return m_pDispLink->send(data, len);
 	} else {
 		//[TBD] message lost? should bring down this proxy.
 		LOG(TAG_LOGIN, "send dispatcher failed, m_pDispLink==NULL.");
+		return RES_FAIL;
 	}
 }
 

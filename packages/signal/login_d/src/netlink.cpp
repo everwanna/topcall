@@ -32,10 +32,16 @@ void	NetLink::connect() {
 	LOG(TAG_LOGIN, "connect %s, linkid=%d", m_strName.c_str(), bufferevent_getfd(m_pEvent) );
 }
 
-void	NetLink::send(const char* msg, int len) 
+int		NetLink::send(const char* msg, int len) 
 {
 	if( m_pEvent != NULL ) {
-		bufferevent_write(m_pEvent, msg, len);
+		if( bufferevent_write(m_pEvent, msg, len) == 0 ) {
+			return RES_OK;
+		} else {
+			return RES_FAIL;
+		}
+	} else {
+		return RES_FAIL;
 	}
 }
 

@@ -16,7 +16,7 @@ public:
 
 public:
 	void	run();		
-	void	sendDispatcher(const char* data, int len);
+	int		sendDispatcher(const char* data, int len);
 
 	int		getSystemTime();
 	LoginMgr*	getLTMgr() { return m_pMgr; }	

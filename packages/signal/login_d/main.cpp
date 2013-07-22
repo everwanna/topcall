@@ -24,6 +24,7 @@ int main(int argc, char* argv[])
 	config.area = ini.getInt("login", "area");
 	config.disp_ip = ini.getString("dispatcher", "ip");
 	config.disp_port = ini.getInt("dispatcher", "port");
+	config.udb_name = ini.getString("udb", "name");
 	config.udb_ip = ini.getString("udb", "ip");
 	config.udb_port = ini.getInt("udb", "port");
 
@@ -43,6 +44,7 @@ int main(int argc, char* argv[])
 	LOG(TAG_LOGIN, "	area    = %d ", config.area);
 	LOG(TAG_LOGIN, "	master_ip   = %s ", config.disp_ip.c_str());
 	LOG(TAG_LOGIN, "	master_port = %d ", config.disp_port);
+	LOG(TAG_LOGIN, "	udb_name = %s ", config.name.c_str());
 	LOG(TAG_LOGIN, "	udb_ip   = %s ", config.udb_ip.c_str());
 	LOG(TAG_LOGIN, "	udb_port = %d ", config.udb_port);
 

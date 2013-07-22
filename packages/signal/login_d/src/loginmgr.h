@@ -11,6 +11,7 @@ class LinkMgr;
 class MongoLink;
 class UInfoMgr;
 class MsgResender;
+class Seq;
 class LoginMgr {
 public:
 	LoginMgr(const LoginConfig& config);
@@ -28,6 +29,7 @@ public:
 	inline MongoLink*	getMongo() { return m_pMongo; }
 	inline UInfoMgr*	getUInfoMgr() { return m_pUInfoMgr; }
 	inline MsgResender*	getResender() { return m_pResender; }
+	inline Seq*			getSeq() { return m_pSeq; }
 	inline LoginConfig*	getConfig() { return &m_config; }		//yeah, take care here.
 
 private:
@@ -38,6 +40,7 @@ private:
 	MongoLink*	m_pMongo;
 	UInfoMgr*	m_pUInfoMgr;
 	MsgResender*m_pResender;
+	Seq*		m_pSeq;
 	LoginConfig	m_config;
 	int			m_nSeq;
 };

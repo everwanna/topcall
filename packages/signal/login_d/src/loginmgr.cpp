@@ -5,6 +5,7 @@
 #include "mongolink.h"
 #include "uinfomgr.h"
 #include "msgresender.h"
+#include "seq.h"
 
 LoginMgr::LoginMgr(const LoginConfig& config)
 	: m_config(config)
@@ -13,9 +14,10 @@ LoginMgr::LoginMgr(const LoginConfig& config)
 	m_pHandler = new MsgHandler(this);
 	m_pLinkMgr = new LinkMgr(this);
 
-	m_pMongo = new MongoLink();
+	m_pMongo = new MongoLink(config.udb_name);
 	m_pUInfoMgr = new UInfoMgr();
 	m_pResender = new MsgResender(this);
+	m_pSeq = new Seq();
 
 	m_nSeq = 0;
 }
@@ -36,6 +38,12 @@ LoginMgr::~LoginMgr() {
 	}
 	if( m_pUInfoMgr ) {
 		delete m_pUInfoMgr;
+	}
+	if( m_pResender ) {
+		delete m_pResender;
+	}
+	if( m_pSeq ) {
+		delete m_pSeq;
 	}
 }
 

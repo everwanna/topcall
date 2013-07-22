@@ -14,9 +14,9 @@ struct LoginConfig {
 	std::string	disp_ip;
 	short		disp_port;
 
+	std::string udb_name;
 	std::string udb_ip;
-	short  udb_port;
-	
+	short  udb_port;	
 };
 
 #endif

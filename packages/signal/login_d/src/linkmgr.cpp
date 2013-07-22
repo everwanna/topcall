@@ -2,6 +2,7 @@
 #include "link.h"
 #include "msgresender.h"
 #include "loginmgr.h"
+#include "seq.h"
 #include <vector>
 
 LinkMgr::LinkMgr(LoginMgr* mgr)
@@ -43,7 +44,7 @@ void	LinkMgr::send(int linkid, const char* msg, int len) {
 	}
 
 	if( bufferevent_write(it->second->bev, msg, len) == -1 ) {
-		m_pLoginMgr->getResender()->add(it->second->uid, it->second->seq++, std::string(msg,len) );
+		m_pLoginMgr->getResender()->add(it->second->uid, m_pLoginMgr->getSeq()->next(), std::string(msg,len) );
 	}
 }
 

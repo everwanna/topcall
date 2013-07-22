@@ -5,7 +5,7 @@
 
 struct UInfo {
 	int		uid;
-	int		linkid;
+	//int		linkid;
 	std::string	passport;
 	std::string password;
 	std::string cookie;

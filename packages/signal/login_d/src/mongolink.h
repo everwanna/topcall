@@ -7,7 +7,7 @@
 struct UInfo;
 class MongoLink {
 public:
-	MongoLink();
+	MongoLink(const std::string& dbname);
 	~MongoLink();
 
 public:
@@ -16,6 +16,7 @@ public:
 
 private:
 	mongo	m_mongo;
+	std::string	m_strDBName;
 };
 
 

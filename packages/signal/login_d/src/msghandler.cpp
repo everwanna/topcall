@@ -15,6 +15,9 @@ MsgHandler::MsgHandler(LoginMgr* mgr)
 }
 
 MsgHandler::~MsgHandler() {
+	if( m_pBuffer ) {
+		delete[] m_pBuffer;
+	}
 }
 
 void	MsgHandler::handle(int linkid, char* msg, int len) {

@@ -64,12 +64,14 @@ struct PSendReq : Packet {
 	int			uid;
 	int			peer;
 	int			seq;
+	int			last_seq;
 	std::string	data;
 
 	virtual void	unmarshall(Unpack& up) {		
 		uid = up.popInt32();
 		peer = up.popInt32();
 		seq = up.popInt32();
+		last_seq = up.popInt32();
 		data = up.popString();
 	}
 
@@ -77,6 +79,7 @@ struct PSendReq : Packet {
 		pk.pushInt32(uid);
 		pk.pushInt32(peer);
 		pk.pushInt32(seq);
+		pk.pushInt32(last_seq);
 		pk.pushString(data);
 	}
 };

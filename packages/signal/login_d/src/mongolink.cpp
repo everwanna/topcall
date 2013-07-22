@@ -1,7 +1,9 @@
 #include "mongolink.h"
 #include "uinfo.h"
 
-MongoLink::MongoLink() {
+MongoLink::MongoLink(const std::string& dbname) 
+	: m_strDBName(dbname)
+{
 	mongo_init(&m_mongo);
 }
 
@@ -34,13 +36,13 @@ UInfo*	MongoLink::query(const std::string& passport) {
 	bson_append_string( query, "passport", passport.c_str() );
 	bson_finish( query );
 
-	mongo_cursor_init( cursor, &m_mongo, "test.udb" );
+	mongo_cursor_init( cursor, &m_mongo, m_strDBName.c_str() );
 	mongo_cursor_set_query( cursor, query );
 
-	while( mongo_cursor_next( cursor ) == MONGO_OK ) {
+	if( mongo_cursor_next( cursor ) == MONGO_OK ) {
 		bson_iterator iterator[1];
 		uinfo = new UInfo();
-		uinfo->linkid = 0;
+		//uinfo->linkid = 0;
 
 		if ( bson_find( iterator, mongo_cursor_bson( cursor ), "uid" ) != BSON_EOO ) {
 			uinfo->uid= bson_iterator_int( iterator );			
@@ -53,6 +55,8 @@ UInfo*	MongoLink::query(const std::string& passport) {
 		if ( bson_find( iterator, mongo_cursor_bson( cursor ), "password" ) != BSON_EOO ) {
 			uinfo->password= bson_iterator_string( iterator );
 		}		
+	} else {
+		LOG(TAG_LOGIN, "query passport failed, passport=%s", passport.c_str());
 	}
 
 exit:

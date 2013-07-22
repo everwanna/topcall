@@ -91,6 +91,7 @@
     <ClCompile Include="src\netlink.cpp" />
     <ClCompile Include="src\netlistener.cpp" />
     <ClCompile Include="src\netloop.cpp" />
+    <ClCompile Include="src\seq.cpp" />
     <ClCompile Include="src\uinfomgr.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +109,7 @@
     <ClInclude Include="src\netlink.h" />
     <ClInclude Include="src\netlistener.h" />
     <ClInclude Include="src\netloop.h" />
+    <ClInclude Include="src\seq.h" />
     <ClInclude Include="src\uinfo.h" />
     <ClInclude Include="src\uinfomgr.h" />
   </ItemGroup>

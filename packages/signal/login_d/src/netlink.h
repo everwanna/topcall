@@ -11,7 +11,7 @@ public:
 
 public:
 	void	connect();
-	void	send(const char* msg, int len);
+	int		send(const char* msg, int len);
 	void	close();
 	void	startReconn();
 	void	stopReconn();

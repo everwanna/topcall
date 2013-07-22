@@ -6,7 +6,6 @@
 struct Link {
 	int		linkid;
 	int		uid;
-	int		seq;
 	int		stamp;
 	bufferevent* bev;
 	bool	closed;
