@@ -79,7 +79,9 @@ exit:
 	return uinfo;
 }
 
+void	MongoLink::save(UInfo* uinfo) {
 
+}
 
 
 

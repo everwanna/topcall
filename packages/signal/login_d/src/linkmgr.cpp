@@ -3,6 +3,7 @@
 #include "msgresender.h"
 #include "loginmgr.h"
 #include "seq.h"
+#include "uidsync.h"
 #include <vector>
 
 LinkMgr::LinkMgr(LoginMgr* mgr)
@@ -69,6 +70,12 @@ void	LinkMgr::removeExpire(int time) {
 			//it's expired:
 			LOG(TAG_LOGIN, "LinkMgr::clearExpire, link expired, linkid/stamp/now=%d,%d,%d", link->linkid, link->stamp, time);
 			links.push_back( link->linkid );
+
+			//remove from the uid->linkid map:
+			m_mapUidLinks.erase( link->uid );
+
+			//tell uid sync:
+			m_pLoginMgr->getUidSync()->onRemvoe(link->uid);
 		}
 	}
 

@@ -3,9 +3,9 @@
 #include "msghandler.h"
 #include "linkmgr.h"
 #include "mongolink.h"
-#include "uinfomgr.h"
 #include "msgresender.h"
 #include "seq.h"
+#include "uidsync.h"
 
 LoginMgr::LoginMgr(const LoginConfig& config)
 	: m_config(config)
@@ -15,9 +15,9 @@ LoginMgr::LoginMgr(const LoginConfig& config)
 	m_pLinkMgr = new LinkMgr(this);
 
 	m_pMongo = new MongoLink(config.udb_name);
-	m_pUInfoMgr = new UInfoMgr();
 	m_pResender = new MsgResender(this);
 	m_pSeq = new Seq();
+	m_pUidSync = new UidSync(this);
 
 	m_nSeq = 0;
 }
@@ -36,14 +36,14 @@ LoginMgr::~LoginMgr() {
 	if( m_pMongo ) {
 		delete m_pMongo;
 	}
-	if( m_pUInfoMgr ) {
-		delete m_pUInfoMgr;
-	}
 	if( m_pResender ) {
 		delete m_pResender;
 	}
 	if( m_pSeq ) {
 		delete m_pSeq;
+	}
+	if( m_pUidSync ) {
+		delete m_pUidSync;
 	}
 }
 
@@ -70,12 +70,13 @@ void	LoginMgr::onTimer() {
 
 	//check resend list:
 	m_pResender->onTimer();
+	m_pUidSync->sync();
 	//
 	//[TBD] what about other links, links from mgroup?
 	//Seems no need HB for mgroup, the packages should be quite frequently.
 	//
 	if( m_nSeq % LINK_CHECK_INTERVAL == 0 ) {
-		
+		m_pLinkMgr->removeExpire(time);
 	}
 
 	m_nSeq++;

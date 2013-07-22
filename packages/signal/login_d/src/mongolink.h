@@ -13,6 +13,7 @@ public:
 public:
 	int		connect(const std::string& ip, short port);
 	UInfo*	query(const std::string& passport);
+	void	save(UInfo* uinfo);
 
 private:
 	mongo	m_mongo;
@@ -21,3 +22,6 @@ private:
 
 
 #endif
+
+
+

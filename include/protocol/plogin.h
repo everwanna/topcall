@@ -116,19 +116,30 @@ struct PSendRes : Packet {
 struct PSyncUidsReq : Packet {	
 	enum { uri=URI_SYNCUIDS_REQ };
 
-	std::vector<int>	uids;
+	std::vector<int>	adds;
+	std::vector<int>	removes;
 
 	virtual void	unmarshall(Unpack& up) {	
 		int len = up.popInt16();
 		for( int i=0; i<len; i++ ) {
-			uids.push_back( up.popInt32() );
+			adds.push_back( up.popInt32() );
+		}
+
+		len = up.popInt16();
+		for( int i=0; i<len; i++ ) {
+			removes.push_back( up.popInt32() );
 		}
 	}
 
 	virtual void	marshall(Pack& pk) {	
-		pk.pushInt16( uids.size() );
-		for( size_t i=0; i<uids.size(); i++ ) {
-			uids.push_back( uids[i] );
+		pk.pushInt16( adds.size() );
+		for( size_t i=0; i<adds.size(); i++ ) {
+			pk.pushInt32( adds[i] );
+		}
+
+		pk.pushInt16( removes.size() );
+		for( size_t i=0; i<removes.size(); i++ ) {
+			pk.pushInt32( removes[i] );
 		}
 	}
 };

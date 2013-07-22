@@ -15,9 +15,6 @@ MsgHandler::~MsgHandler() {
 }
 
 void	MsgHandler::handle(int linkid, char* msg, int len) {
-#ifdef _DEBUG
-	//LOG(TAG_MCENTER, "MsgHandler::handle, linkid=%d, len=%d", linkid, len);
-#endif
 	Unpack up(msg, len);
 	up.popHead();
 
@@ -33,6 +30,9 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 		break;
 	case URI_SYNCUIDS_REQ:
 		onSyncUidsReq(linkid, &up);
+		break;
+	default:
+		LOG(TAG_DISPATCHER, "unknown package, uri=%d.", up.getUri());
 		break;
 	}
 }
@@ -84,8 +84,12 @@ void	MsgHandler::onSyncUidsReq(int linkid, Unpack* up) {
 	PSyncUidsReq req;
 	req.unmarshall(*up);
 
-	for( size_t i=0; i<req.uids.size(); i++ ) {
-		m_pDispMgr->getLinkMgr()->setUid( req.uids[i], linkid );
+	for( size_t i=0; i<req.adds.size(); i++ ) {
+		m_pDispMgr->getLinkMgr()->setUid( req.adds[i], linkid );
+	}
+
+	for( size_t i=0; i<req.removes.size(); i++ ) {
+		
 	}
 }
 

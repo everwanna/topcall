@@ -4,7 +4,7 @@
 #include "linkmgr.h"
 #include "mongolink.h"
 #include "uinfo.h"
-#include "uinfomgr.h"
+#include "uidsync.h"
 
 using namespace login;
 
@@ -61,43 +61,7 @@ void	MsgHandler::onLoginReq(int linkid, Unpack* up) {
 	req.unmarshall(*up);
 
 	LOG(TAG_LOGIN, "login user with uid=%d, passport=%s.", req.uid, req.passport.c_str());
-	//verify the user:
-	//cache first:
-	if( req.uid != 0 ) {
-		uinfo = m_pLoginMgr->getUInfoMgr()->get(req.uid);
-		if( uinfo == NULL ) {
-			//uid !=0, user reconnect, but we have no info here in this proxy. That means user logon other proxy before.
-			//need to notify the other proxy:
-			LOG(TAG_LOGIN, "user logon other proxy before, uid=%d.", req.uid);
-			uinfo = m_pLoginMgr->getMongo()->query(req.passport);
-			if( uinfo == NULL ) {
-				//uid!=0, mongo db empty, how?
-				LOG(TAG_LOGIN, "wired, no login record for uid=%d", req.uid);
-			} else {
-				//notify that proxy, the user has logon another proxy.
-				//[TBD]
-				PMutiLoginNotify notify;	
-				notify.old_router = uinfo->router;
-				notify.old_dispatcher = uinfo->dispatcher;
-				notify.old_proxy = uinfo->proxy;
-				notify.new_router = m_pLoginMgr->getRouter();
-				notify.new_dispatcher = m_pLoginMgr->getDispatcher();
-				notify.new_proxy = m_pLoginMgr->getConfig()->name;
-
-				Pack mpk(SVID_LOGIN, PMutiLoginNotify::uri);
-				notify.marshall(mpk);
-				mpk.pack();
-				m_pLoginMgr->getLooper()->sendDispatcher( mpk.getBuf(), mpk.getLen() );
-			}
-		}
-	} else {
-		//mongodb next:
-		uinfo = m_pLoginMgr->getMongo()->query(req.passport);
-		if( uinfo != NULL ) {
-			//add to cache, no matter passport is good or not.
-			m_pLoginMgr->getUInfoMgr()->add(uinfo);
-		}
-	}
+	uinfo = m_pLoginMgr->getMongo()->query(req.passport);	
 	if( uinfo == NULL ) {
 		res.res = RES_FAIL;
 	} else {
@@ -107,6 +71,9 @@ void	MsgHandler::onLoginReq(int linkid, Unpack* up) {
 			res.res = RES_OK;
 			res.uid = uinfo->uid;
 			res.cookie = uinfo->cookie;	//nothing for now.
+
+			//add to uid sync:
+			m_pLoginMgr->getUidSync()->onAdd(res.uid);
 		}
 	}	
 	Pack pk(SVID_LOGIN, PLoginRes::uri);

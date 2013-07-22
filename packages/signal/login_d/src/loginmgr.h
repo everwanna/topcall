@@ -9,9 +9,9 @@ class MsgHandler;
 class LTable;
 class LinkMgr;
 class MongoLink;
-class UInfoMgr;
 class MsgResender;
 class Seq;
+class UidSync;
 class LoginMgr {
 public:
 	LoginMgr(const LoginConfig& config);
@@ -33,9 +33,9 @@ public:
 	inline LTable*		getLTable() { return m_pLTable; }
 	inline LinkMgr*		getLinkMgr() { return m_pLinkMgr; }	
 	inline MongoLink*	getMongo() { return m_pMongo; }
-	inline UInfoMgr*	getUInfoMgr() { return m_pUInfoMgr; }
 	inline MsgResender*	getResender() { return m_pResender; }
 	inline Seq*			getSeq() { return m_pSeq; }
+	inline UidSync*		getUidSync() { return m_pUidSync; }
 	inline LoginConfig*	getConfig() { return &m_config; }		//yeah, take care here.
 
 private:
@@ -44,9 +44,9 @@ private:
 	LTable*		m_pLTable;
 	LinkMgr*	m_pLinkMgr;	
 	MongoLink*	m_pMongo;
-	UInfoMgr*	m_pUInfoMgr;
 	MsgResender*m_pResender;
 	Seq*		m_pSeq;
+	UidSync*	m_pUidSync;
 	LoginConfig	m_config;
 	int			m_nSeq;
 	std::string	m_strRouter;
@@ -54,5 +54,3 @@ private:
 };
 
 #endif
-
-
