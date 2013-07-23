@@ -53,6 +53,10 @@ void	MsgHandler::onRegProxyRes(int linkid, Unpack* up) {
 	m_pLoginMgr->setDispatcher(res.dispatcher);
 }
 
+/**
+ * no cache, to void data conflict.
+ * Target: 3000tps
+ */
 void	MsgHandler::onLoginReq(int linkid, Unpack* up) {
 	PLoginRes res;
 	UInfo* uinfo = NULL;

@@ -12,6 +12,9 @@ MsgHandler::MsgHandler(DispMgr* mgr)
 }
 
 MsgHandler::~MsgHandler() {
+	if( m_pBuffer ) {
+		delete[] m_pBuffer;
+	}
 }
 
 void	MsgHandler::handle(int linkid, char* msg, int len) {
@@ -89,7 +92,7 @@ void	MsgHandler::onSyncUidsReq(int linkid, Unpack* up) {
 	}
 
 	for( size_t i=0; i<req.removes.size(); i++ ) {
-		
+		m_pDispMgr->getLinkMgr()->removeUid( req.removes[i] );
 	}
 }
 
