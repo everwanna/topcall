@@ -76,11 +76,12 @@ void	NetLoop::listener_cb(evconnlistener *listener, evutil_socket_t fd, sockaddr
 
 void	NetLoop::read_cb(struct bufferevent *bev, void *ctx)
 {
-	static int seq = 0;
-	LOG(TAG_PUSH, "NetLoop::read_cb, seq=%d", seq++);	
+//	static int seq = 0;
+//	LOG(TAG_PUSH, "NetLoop::read_cb, seq=%d", seq++);	
 	NetLoop* loop = (NetLoop*)ctx;
 	struct evbuffer *src;
 	size_t len;
+	char lenbuf[4];
 	size_t msg_len;
 
 	src = bufferevent_get_input(bev);	
@@ -93,12 +94,10 @@ void	NetLoop::read_cb(struct bufferevent *bev, void *ctx)
 			break;
 		}
 
-		//evbuffer_remove(src, &msg_len, 4);
-		evbuffer_copyout(src, &msg_len, 4);
-		if( msg_len <= len-4 ) {
-			evbuffer_remove(src, &msg_len, 4);
+		evbuffer_copyout(src, &lenbuf, 4);
+		msg_len = lenbuf[0]<<24|lenbuf[1]<<16 | lenbuf[2]>>8 | lenbuf[3];
+		if( msg_len <= len ) {
 			evbuffer_remove(src, loop->m_pBuffer, msg_len);
-
 			loop->m_pPushMgr->getHandler()->handle(bufferevent_getfd(bev), loop->m_pBuffer, msg_len);						
 		} else {
 			//not enough data again, return.
@@ -121,7 +120,5 @@ void	NetLoop::event_cb(bufferevent *bev, short events, void *user_data)
 	if (events & BEV_EVENT_EOF || events &BEV_EVENT_ERROR ) {
 		LOG(TAG_PUSH, "NetLoop::event_cb, BEV_EVENT_EOF for linkid %d", linkid);
 		loop->m_pPushMgr->deleteConsumer(linkid);
-		loop->m_pPushMgr->deleteProducer(linkid);
-
 	}
 }

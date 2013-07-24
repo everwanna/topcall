@@ -20,6 +20,7 @@
 #include <core/isp.h>
 
 #include <protocol/plogin.h>
+#include <protocol/ppush.h>
 #include <protocol/pdeamon.h>
 
 extern "C" {

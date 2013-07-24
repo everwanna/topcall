@@ -17,9 +17,6 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 	up.popHead();
 	
 	switch(up.getUri() ) {
-	case PProducerRegisterReq::uri:
-		onProducerRegisterReq(linkid, &up);
-		break;
 	case PConsumerRegisterReq::uri:
 		onConsumerRegisterReq(linkid, &up);
 		break;
@@ -27,15 +24,6 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 		onPushMsg(linkid, &up);
 		break;
 	}
-}
-
-void	MsgHandler::onProducerRegisterReq(int linkid, Unpack* up) {
-	LOG(TAG_PUSH, "MsgHandler::onProducerRegisterReq.");
-
-	PProducerRegisterReq req;
-	req.unmarshall(*up);
-
-	m_pPushMgr->registerProducer(linkid, req.name);
 }
 
 void	MsgHandler::onConsumerRegisterReq(int linkid, Unpack* up) {

@@ -8,6 +8,7 @@ RouteMgr::RouteMgr(const RouteConfig& config)
 {
 	m_pLooper = new NetLoop(this, 
 		m_config.dm_ip, m_config.dm_port,
+		m_config.push_ip, m_config.push_port,
 		m_config.port);
 	m_pHandler = new MsgHandler(this);
 	m_pLinkMgr = new LinkMgr();

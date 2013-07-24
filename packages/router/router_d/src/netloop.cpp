@@ -8,6 +8,7 @@
 
 NetLoop::NetLoop(RouteMgr* mgr, 
 				 const std::string& dm_ip, short dm_port,
+				 const std::string& push_ip, short push_port,
 				 short port) 
 	: m_pMgr(mgr)
 {
@@ -25,6 +26,12 @@ NetLoop::NetLoop(RouteMgr* mgr,
 	{
 		m_pDMLink = new NetLink(this, "deamon", dm_ip, dm_port);
 		m_pDMLink->connect();
+	}
+
+	//connect to push_d
+	{
+		m_pPushLink = new NetLink(this, "push", push_ip, push_port);
+		m_pPushLink->connect();
 	}
 
 	//startup tcp listener:

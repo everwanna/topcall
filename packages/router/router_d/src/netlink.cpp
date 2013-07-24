@@ -26,7 +26,6 @@ void	NetLink::connect() {
 	bufferevent_enable(m_pEvent, EV_READ|EV_WRITE);
 
 	bufferevent_socket_connect(m_pEvent, (sockaddr*)&m_addr, sizeof(m_addr));
-	LOG(TAG_ROUTER, "connect %s, linkid=%d", m_strName.c_str(), bufferevent_getfd(m_pEvent) );
 }
 
 void	NetLink::send(const char* msg, int len) 
@@ -114,6 +113,19 @@ void	NetLink::event_cb(bufferevent *bev, short events, void *user_data)
 	} else if( events&BEV_EVENT_CONNECTED ) {
 		LOG(TAG_ROUTER, "%s connected, linkid=%d, ip=%s, port=%d", link->m_strName.c_str(), linkid, link->m_strIp.c_str(), link->m_nPort);
 		link->stopReconn();
+
+		std::string name = link->m_pLooper->getMgr()->getConfig()->name;
+		if( link->m_strName == "push" ) {
+			PConsumerRegisterReq req;
+			req.name = name;
+			req.topic = name;
+
+			Pack pk(SVID_IDC_PUSH, PConsumerRegisterReq::uri);
+			req.marshall(pk);
+			pk.pack();
+
+			link->send( pk.getBuf(), pk.getLen() );
+		}
 	}
 }
 

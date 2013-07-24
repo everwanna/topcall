@@ -12,6 +12,9 @@ struct RouteConfig {
 	
 	std::string dm_ip;
 	short		dm_port;
+
+	std::string push_ip;
+	short		push_port;
 };
 
 #endif

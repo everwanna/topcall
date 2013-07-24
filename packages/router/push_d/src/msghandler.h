@@ -13,7 +13,6 @@ public:
 	void	handle(int linkid, char* msg, int len);
 
 public:
-	void	onProducerRegisterReq(int linkid, Unpack* up);
 	void	onConsumerRegisterReq(int linkid, Unpack* up);
 	void	onPushMsg(int linkid, Unpack* up);
 

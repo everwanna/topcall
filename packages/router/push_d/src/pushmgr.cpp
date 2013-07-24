@@ -2,12 +2,13 @@
 #include "store.h"
 #include "netloop.h"
 #include "msghandler.h"
-#include "producer.h"
 #include "consumer.h"
 
 
-PushMgr::PushMgr(short port) {
-	m_pLooper = new NetLoop(this, port);
+PushMgr::PushMgr(PushConfig& config) 
+	: m_config(config)
+{
+	m_pLooper = new NetLoop(this, m_config.port);
 	m_pHandler = new MsgHandler(this);
 	m_pStore = new Store(this);
 }
@@ -24,47 +25,18 @@ PushMgr::~PushMgr() {
 	}
 }
 
-
-int		PushMgr::registerProducer(int linkid, const std::string& name) {
-	Producer* old = NULL;
-	Producer* producer = NULL;
-
-	if( m_mapProducers.find(name) != m_mapProducers.end() ) {
-		old = m_mapProducers[name];		
-	}
-
-	producer = new Producer(linkid, name);
-	m_mapProducers[name] = producer;
-
-	//delete the old producer now, to void remove producer relative data too early.
-	if( old ) {
-		delete old;
-	}
-
-	return RES_OK;
-}
-
-void	PushMgr::deleteProducer(int linkid) {
-	std::map<std::string, Producer*>::iterator it;
-
-	for( it = m_mapProducers.begin(); it != m_mapProducers.end(); it++ ) {
-		if( it->second->getLinkId() == linkid ) {
-			Producer* producer = it->second;
-			m_mapProducers.erase(it);
-
-			delete producer;
-			return;
-		}
-	}
-}
-
 int		PushMgr::registerConsumer(int linkid, const std::string& name, const std::string& topic) {
 	Consumer* old = NULL;
 	Consumer* consumer = NULL;
 
 	if( !hasTopic(topic) ) {
-		LOG(TAG_PUSH, "PushMgr.registerConsumer, topic doesn't exist, topic=%d", topic);
-		return RES_FAIL;
+		LOG(TAG_PUSH, "PushMgr.registerConsumer, topic doesn't exist, create topic %d", topic);
+		createTopic(topic);
+		
+		if( !hasTopic(topic) ) {
+			LOG(TAG_PUSH, "PushMgr.registerConsumer, topic doesn't exist, topic=%d, FAIL!!!@", topic);			
+			return RES_FAIL;
+		}
 	}
 
 	if( m_mapConsumers.find(name) != m_mapConsumers.end() ) {

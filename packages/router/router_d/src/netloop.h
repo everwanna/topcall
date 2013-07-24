@@ -13,6 +13,7 @@ class NetLoop
 public:
 	NetLoop(RouteMgr* mgr, 
 			const std::string& dm_ip, short dm_port,
+			const std::string& push_ip, short push_port,
 			short port);
 	~NetLoop();
 
@@ -33,6 +34,7 @@ private:
 	event_base*	m_event_base;
 	NetListener*m_pListener;
 	NetLink*	m_pDMLink;
+	NetLink*	m_pPushLink;
 	char*		m_pBuffer;
 
 	//timer:
