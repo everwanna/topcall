@@ -6,7 +6,9 @@
 
 #define URI_MDEAMON_REPORT			1
 #define URI_MDEAMON_QUERY_REQ		100
-#define URI_MDEAMON_QUERY_RES		100
+#define URI_MDEAMON_QUERY_RES		101
+
+#define URI_MDEAMON_ONADDSVC		200
 
 struct PDSvcInfo : Packet {	
 	std::string ip;
@@ -113,6 +115,20 @@ struct PDQueryRes : Packet {
 		for( size_t i=0; i<infos.size(); i++ ) {
 			infos[i].marshall(pk);
 		}
+	}
+};
+
+struct PMDOnAddSvc : Packet {
+	enum { uri=URI_MDEAMON_ONADDSVC };	
+	
+	PDSvcInfo	info;
+		
+	virtual void	unmarshall(Unpack& up) {
+		info.unmarshall(up);
+	}
+
+	virtual void	marshall(Pack& pk) {
+		info.marshall(pk);
 	}
 };
 

@@ -19,8 +19,9 @@ enum {
 	URI_REGPROXY_RES		= 101,
 	URI_REGDISP_REQ			= 102,
 	URI_REGDISP_RES			= 103,
-	URI_REGROUTER_REQ		= 104,
-	URI_REGROUTER_RES		= 105,
+
+	URI_ROUTER_SEND_REQ		= 201,
+	URI_ROUTER_SEND_RES		= 202,
 };
 
 struct PLoginReq : Packet {	
@@ -238,37 +239,30 @@ struct PRegDispRes : Packet {
 	}
 };
 
-struct PRegRouterReq : Packet {	
-	enum { uri=URI_REGROUTER_REQ };
+struct PRTSendReq : Packet {	
+	enum { uri=URI_ROUTER_SEND_REQ };
 
-	std::string		name;
+	int			uid;
+	int			peer;
+	std::string	payload;
 
-	virtual void	unmarshall(Unpack& up) {	
-		name = up.popString();
+	virtual void	unmarshall(Unpack& up) {		
+		uid = up.popInt32();
+		peer = up.popInt32();
+		payload = up.popString();
 	}
 
-	virtual void	marshall(Pack& pk) {	
-		pk.pushString(name);
-	}
-};
-
-
-struct PRegRouterRes : Packet {	
-	enum { uri=URI_REGROUTER_RES };
-
-	int				res;
-	std::string		name;
-
-	virtual void	unmarshall(Unpack& up) {	
-		res = up.popInt32();
-		name = up.popString();
-	}
-
-	virtual void	marshall(Pack& pk) {	
-		pk.pushInt32(res);
-		pk.pushString(name);
+	virtual void	marshall(Pack& pk) {		
+		pk.pushInt32(uid);
+		pk.pushInt32(peer);
+		pk.pushString(payload);		
 	}
 };
+
+struct PRTSendRes : Packet {	
+	enum { uri=URI_ROUTER_SEND_RES };
+};
+
 
 }
 
