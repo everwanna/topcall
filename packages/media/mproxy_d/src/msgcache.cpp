@@ -5,6 +5,12 @@ MsgCache::MsgCache(int max) : m_nMax(max) {
 
 MsgCache::~MsgCache() {
 	//[TBD] clean up.
+	for( std::map<int, Msg*>::iterator it = m_mapMsgs.begin(); it != m_mapMsgs.end(); it++ ) {
+		if( it->second ) {
+			delete it->second;
+		}
+	}
+	m_mapMsgs.clear();
 }
 
 void	MsgCache::add(int seq, Msg* msg) {	

@@ -36,5 +36,6 @@ void	MsgCacheMgr::remove(int uid) {
 	
 	MsgCache* cache = it->second;
 	delete cache;
+
 	m_mapCaches.erase(it);
 }
