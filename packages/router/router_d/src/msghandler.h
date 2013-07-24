@@ -14,6 +14,7 @@ public:
 
 public:
 	void	onRegDispReq(int linkid, Unpack* up);
+	void	onSendReq(int linkid, Unpack* up);
 
 private:
 	RouteMgr*	m_pMgr;

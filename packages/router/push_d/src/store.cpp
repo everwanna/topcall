@@ -80,7 +80,7 @@ void	Store::unsubscribe(const std::string& name, const std::string& topic) {
 
 void	Store::push(const std::string& topic, const std::string& payload) {
 	if( !hasTopic(topic) ) {
-		LOG(TAG_PUSH, "Store::push, topic %d not found.", topic);
+		LOG(TAG_PUSH, "Store::push, topic %s not found.", topic);
 		return;
 	}
 

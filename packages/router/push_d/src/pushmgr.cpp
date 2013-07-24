@@ -100,3 +100,6 @@ void	PushMgr::run() {
 		m_pLooper->run();
 	}
 }
+
+void	PushMgr::onTimer() {
+}

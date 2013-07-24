@@ -30,6 +30,8 @@ public:
 	void	push(const std::string& topic, const std::string& payload);
 	void	run();
 
+	void	onTimer();
+
 public:
 	MsgHandler*	getHandler() { return m_pHandler; }
 	NetLoop*	getLooper() { return m_pLooper; }

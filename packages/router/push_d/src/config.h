@@ -17,5 +17,6 @@ extern "C" {
 
 #define TAG_PUSH			"push - "
 #define NET_BUFFER_SIZE		1024*1024*8
+#define TIMER_INTERVAL		1
 
 #endif

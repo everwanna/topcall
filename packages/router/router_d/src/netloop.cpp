@@ -24,8 +24,8 @@ NetLoop::NetLoop(RouteMgr* mgr,
 
 	//connect to deamon:
 	{
-		m_pDMLink = new NetLink(this, "deamon", dm_ip, dm_port);
-		m_pDMLink->connect();
+		//m_pDMLink = new NetLink(this, "deamon", dm_ip, dm_port);
+		//m_pDMLink->connect();
 	}
 
 	//connect to push_d
@@ -65,7 +65,29 @@ NetLoop::~NetLoop()
 
 void	NetLoop::run() 
 {
-	event_base_dispatch(m_event_base);
+	//for test:
+	/*
+	login::PSendReq req;
+	req.uid = 10000;
+	req.peer = 10001;
+	req.data = "good bye";
+
+	Pack pk(SVID_LOGIN, login::PSendReq::uri);
+	req.marshall(pk);
+	pk.pack();
+	m_pMgr->getHandler()->handle(0, pk.getBuf(), pk.getLen());
+	*/
+	while(true) {
+		event_base_dispatch(m_event_base);
+	}
+}
+
+void	NetLoop::sendPush(const char* data, int len) {
+	if( m_pPushLink ) {
+		m_pPushLink->send(data, len);
+	} else {
+		LOG(TAG_ROUTER, "send push, m_pPushLink==NULL.");
+	}
 }
 
 /**

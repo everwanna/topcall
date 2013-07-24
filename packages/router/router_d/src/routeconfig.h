@@ -15,6 +15,9 @@ struct RouteConfig {
 
 	std::string push_ip;
 	short		push_port;
+
+	std::string oldb_ip;
+	short		oldb_port;
 };
 
 #endif

@@ -2,6 +2,7 @@
 #include "netloop.h"
 #include "msghandler.h"
 #include "linkmgr.h"
+#include "mongolink.h"
 
 RouteMgr::RouteMgr(const RouteConfig& config)
 	: m_config(config)
@@ -12,6 +13,8 @@ RouteMgr::RouteMgr(const RouteConfig& config)
 		m_config.port);
 	m_pHandler = new MsgHandler(this);
 	m_pLinkMgr = new LinkMgr();
+	m_pMongoLink = new MongoLink("udb.online");
+	m_pMongoLink->connect(config.oldb_ip, config.oldb_port);
 	m_nSeq = 0;
 }
 
@@ -25,6 +28,9 @@ RouteMgr::~RouteMgr() {
 	}
 	if( m_pLinkMgr ) {
 		delete m_pLinkMgr;
+	}
+	if( m_pMongoLink ) {
+		delete m_pMongoLink;
 	}
 }
 

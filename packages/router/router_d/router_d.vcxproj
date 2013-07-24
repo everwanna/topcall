@@ -52,13 +52,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\depends\libzmq\include;..\..\..\depends\libevent\include;..\..\..\include;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\depends\libmongo\include;..\..\..\depends\libevent\include;..\..\..\include;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/D "MONGO_USE__INT64"  /D "MONGO_STATIC_BUILD" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;Advapi32.lib;libevent.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\depends\libzmq\lib;..\..\..\depends\libevent\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;Advapi32.lib;libevent.lib;libmongo.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\depends\libmongo\lib;..\..\..\depends\libevent\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,6 +83,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\inifile.cpp" />
     <ClCompile Include="src\linkmgr.cpp" />
+    <ClCompile Include="src\mongolink.cpp" />
     <ClCompile Include="src\routemgr.cpp" />
     <ClCompile Include="src\msghandler.cpp" />
     <ClCompile Include="src\netlink.cpp" />
@@ -93,12 +95,14 @@
     <ClInclude Include="src\inifile.h" />
     <ClInclude Include="src\link.h" />
     <ClInclude Include="src\linkmgr.h" />
+    <ClInclude Include="src\mongolink.h" />
     <ClInclude Include="src\routeconfig.h" />
     <ClInclude Include="src\routemgr.h" />
     <ClInclude Include="src\msghandler.h" />
     <ClInclude Include="src\netlink.h" />
     <ClInclude Include="src\netlistener.h" />
     <ClInclude Include="src\netloop.h" />
+    <ClInclude Include="src\uinfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

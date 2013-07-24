@@ -37,8 +37,8 @@ void	MsgHandler::onConsumerRegisterReq(int linkid, Unpack* up) {
 
 void	MsgHandler::onPushMsg(int linkid, Unpack* up) {
 	//some hack here, don't really unpack the full msg:
-	static int seq = 0;
-	LOG(TAG_PUSH, "MsgHandler::onPushMsg, seq=%d.", seq++);
+	//static int seq = 0;
+	//LOG(TAG_PUSH, "MsgHandler::onPushMsg, seq=%d.", seq++);
 
 	PPushMsg msg;
 	msg.unmarshall(*up);

@@ -120,7 +120,7 @@ void	NetLink::event_cb(bufferevent *bev, short events, void *user_data)
 			req.name = name;
 			req.topic = name;
 
-			Pack pk(SVID_IDC_PUSH, PConsumerRegisterReq::uri);
+			Pack pk(SVID_PUSH, PConsumerRegisterReq::uri);
 			req.marshall(pk);
 			pk.pack();
 

@@ -19,6 +19,7 @@ public:
 
 public:
 	void		run();
+	void		sendPush(const char* data, int len);
 
 	int			getSystemTime();
 	RouteMgr*	getMgr() { return m_pMgr; }	

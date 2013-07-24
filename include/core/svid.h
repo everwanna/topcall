@@ -1,7 +1,7 @@
 #ifndef SVID_H
 #define SVID_H
 
-#define	SVID_IDC_PUSH			1
+#define	SVID_PUSH			1
 #define SVID_MPROXY			2
 #define SVID_MGROUP			4
 #define SVID_MCENTER			5

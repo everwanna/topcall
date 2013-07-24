@@ -1,8 +1,9 @@
 #include "netloop.h"
 #include "pushmgr.h"
 #include "msghandler.h"
+#include "pushmgr.h"
 
-NetLoop::NetLoop(PushMgr* mgr, short port) : m_pPushMgr(mgr), m_port(port)
+NetLoop::NetLoop(PushMgr* mgr, short port) : m_pMgr(mgr), m_port(port)
 {
 #ifdef WIN32
 	WSADATA WSAData;
@@ -24,6 +25,15 @@ NetLoop::NetLoop(PushMgr* mgr, short port) : m_pPushMgr(mgr), m_port(port)
 	    sizeof(sin));
 
 	m_pBuffer = new char[NET_BUFFER_SIZE];
+
+	//start a timer to do scheduler job:
+	{
+		timeval tm;
+		tm.tv_sec = TIMER_INTERVAL;
+		tm.tv_usec = 0;
+		m_pTimer = event_new(m_event_base, -1, EV_READ|EV_PERSIST, timer_cb, this);
+		evtimer_add(m_pTimer, &tm);
+	}
 }
 
 NetLoop::~NetLoop()
@@ -98,7 +108,7 @@ void	NetLoop::read_cb(struct bufferevent *bev, void *ctx)
 		msg_len = lenbuf[0]<<24|lenbuf[1]<<16 | lenbuf[2]>>8 | lenbuf[3];
 		if( msg_len <= len ) {
 			evbuffer_remove(src, loop->m_pBuffer, msg_len);
-			loop->m_pPushMgr->getHandler()->handle(bufferevent_getfd(bev), loop->m_pBuffer, msg_len);						
+			loop->m_pMgr->getHandler()->handle(bufferevent_getfd(bev), loop->m_pBuffer, msg_len);						
 		} else {
 			//not enough data again, return.
 			LOG(TAG_PUSH, "NetLoop::read_cb, not enough data, waiting. msg_len=%d, len=%d", msg_len, len);	
@@ -119,6 +129,15 @@ void	NetLoop::event_cb(bufferevent *bev, short events, void *user_data)
 
 	if (events & BEV_EVENT_EOF || events &BEV_EVENT_ERROR ) {
 		LOG(TAG_PUSH, "NetLoop::event_cb, BEV_EVENT_EOF for linkid %d", linkid);
-		loop->m_pPushMgr->deleteConsumer(linkid);
+		loop->m_pMgr->deleteConsumer(linkid);
 	}
 }
+
+void	NetLoop::timer_cb(int fd, short event, void* arg ) {
+	//LOG("NetLoopUdp::timer_cb.");
+
+	NetLoop* loop = (NetLoop*)arg;	
+	loop->m_pMgr->onTimer();
+}
+
+

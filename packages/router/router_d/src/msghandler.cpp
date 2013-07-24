@@ -3,6 +3,8 @@
 #include "netloop.h"
 #include "linkmgr.h"
 #include "link.h"
+#include "uinfo.h"
+#include "mongolink.h"
 
 using namespace login;
 MsgHandler::MsgHandler(RouteMgr* mgr) 
@@ -28,6 +30,9 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 	case URI_REGDISP_REQ:
 		onRegDispReq(linkid, &up);
 		break;
+	case URI_SEND_REQ:
+		onSendReq(linkid, &up);
+		break;
 	}
 }
 
@@ -47,5 +52,26 @@ void	MsgHandler::onRegDispReq(int linkid, Unpack* up) {
 	m_pMgr->getLinkMgr()->send( linkid, pk.getBuf(), pk.getLen() );
 }
 
+void	MsgHandler::onSendReq(int linkid, Unpack* up) {
+	PSendReq req;
+	req.unmarshall(*up);
+
+	LOG(TAG_ROUTER, "send req, uid=%d, peer=%d, seq=%d.", req.uid, req.peer, req.seq);
+	UInfo* uinfo = m_pMgr->getMongo()->query( req.peer );
+	if( uinfo == NULL ) {
+		LOG(TAG_ROUTER, "user offline, peer=%d, seq=%d.", req.peer, req.seq);
+		//[TBD] need to save the packet for some time, and resend...
+		return;
+	}
+
+	PPushMsg pmsg;
+	pmsg.topic = uinfo->router;
+	pmsg.payload.assign( up->getBuf(), up->getLen() );
+
+	Pack pk(SVID_PUSH, PPushMsg::uri);
+	pmsg.marshall(pk);
+	pk.pack();
+	m_pMgr->getLooper()->sendPush( pk.getBuf(), pk.getLen() );
+}
 
 
