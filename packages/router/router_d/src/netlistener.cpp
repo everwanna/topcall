@@ -7,11 +7,14 @@
 
 NetListener::NetListener(NetLoop* loop) 
 	: m_pLooper(loop)
+	, m_listener(NULL)
 {
 }
 
 NetListener::~NetListener() {
-	evconnlistener_free( m_listener );
+	if( m_listener ) {
+		evconnlistener_free( m_listener );
+	}
 }
 
 void	NetListener::listen(short port) {

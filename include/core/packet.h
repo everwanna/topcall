@@ -6,6 +6,15 @@
 class Pack
 {
 public:
+	Pack() {
+		m_pBuf = NULL;
+		m_nLen = 0;
+		m_nPos = 8;
+
+		m_nSvid = 0;
+		m_nUri = 0;
+	}
+
 	Pack(short svid, short uri) {	
 		m_pBuf = new char[8096];
 		m_nLen = 0;
@@ -41,6 +50,13 @@ public:
 	void	reset() {
 		m_nLen = 0;
 		m_nPos = 8;		
+	}
+
+	void	reset(int svid, int uri) {
+		m_nLen = 0;
+		m_nPos = 8;		
+		m_nSvid = svid;
+		m_nUri = uri;
 	}
 
 	void	pushInt32(int val) {

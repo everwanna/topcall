@@ -11,6 +11,7 @@ MsgHandler::MsgHandler(RouteMgr* mgr)
 	: m_pMgr(mgr)
 {
 	m_pBuffer = new char[1024];
+	m_pPack = new Pack();
 }
 
 MsgHandler::~MsgHandler() {
@@ -26,16 +27,22 @@ void	MsgHandler::handle(int linkid, const char* msg, int len) {
 	Unpack up(msg, len);
 	up.popHead();
 
-	switch( up.getUri() ) {
-	case URI_REGDISP_REQ:
-		onRegDispReq(linkid, &up);
-		break;
-	case URI_SEND_REQ:
-		onSendReq(linkid, &up);
-		break;
-	case URI_PUSH_MSG:
-		onPushMsg(linkid, &up);
-		break;
+	int svid = up.getSvid();
+	if( svid == SVID_LOGIN ) {
+		switch( svid ) {
+		case URI_REGDISP_REQ:
+			onRegDispReq(linkid, &up);
+			break;
+		case URI_SEND_REQ:
+			onSendReq(linkid, &up);
+			break;
+		}
+	} else if( svid == SVID_PUSH ) {
+		switch( svid ) {
+		case URI_PUSH_MSG:
+			onPushMsg(linkid, &up);
+			break;
+		}
 	}
 }
 
@@ -48,11 +55,11 @@ void	MsgHandler::onRegDispReq(int linkid, Unpack* up) {
 	res.dispatcher = req.dispatcher;
 	res.router = m_pMgr->getConfig()->name;
 
-	Pack pk(SVID_LOGIN, PRegDispRes::uri);
-	res.marshall(pk);
-	pk.pack();
+	m_pPack->reset(SVID_LOGIN, PRegDispRes::uri);
+	res.marshall(*m_pPack);
+	m_pPack->pack();
 
-	m_pMgr->getLinkMgr()->send( linkid, pk.getBuf(), pk.getLen() );
+	m_pMgr->getLinkMgr()->send( linkid, m_pPack->getBuf(), m_pPack->getLen() );
 }
 
 void	MsgHandler::onSendReq(int linkid, Unpack* up) {
@@ -71,10 +78,10 @@ void	MsgHandler::onSendReq(int linkid, Unpack* up) {
 	pmsg.topic = uinfo->router;
 	pmsg.payload.assign( up->getBuf(), up->getLen() );
 
-	Pack pk(SVID_PUSH, PPushMsg::uri);
-	pmsg.marshall(pk);
-	pk.pack();
-	m_pMgr->getLooper()->sendPush( pk.getBuf(), pk.getLen() );
+	m_pPack->reset(SVID_PUSH, PPushMsg::uri);
+	pmsg.marshall(*m_pPack);
+	m_pPack->pack();
+	m_pMgr->getLooper()->sendPush( m_pPack->getBuf(), m_pPack->getLen() );
 }
 
 void	MsgHandler::onPushMsg(int linkid, Unpack* up) {

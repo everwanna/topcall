@@ -20,6 +20,7 @@ public:
 private:
 	RouteMgr*	m_pMgr;
 	char*		m_pBuffer;
+	Pack*		m_pPack;
 };
 
 #endif
