@@ -3,9 +3,10 @@
 
 #include "config.h"
 
+class PullMgr;
 class NetPuller {
 public:
-	NetPuller(const std::string& mongo_ip, short mongo_port, short port);
+	NetPuller(PullMgr* mgr, const std::string& mongo_ip, short mongo_port, short port);
 
 public:
 	void	run();
@@ -13,6 +14,7 @@ public:
 	void	pull();
 
 private:
+	PullMgr*m_pMgr;
 	int		m_nListener;
 	int		m_nSocket;
 	short	m_nPort;

@@ -3,14 +3,17 @@
 #include "netloop.h"
 #include "msghandler.h"
 #include "consumer.h"
-
+#include "netpuller.h"
+#include "mongolink.h"
 
 PullMgr::PullMgr(PullConfig& config) 
 	: m_config(config)
 {
-	m_pLooper = new NetLoop(this, m_config.port);
+	m_pPuller = new NetPuller(this, config.mongo_ip, config.mongo_port, config.port);
 	m_pHandler = new MsgHandler(this);
 	m_pStore = new Store(this);
+	m_pMongo = new MongoLink("udb.push_d_1");
+	m_pMongo->connect( config.mongo_ip.c_str(), config.mongo_port);
 }
 
 PullMgr::~PullMgr() {
@@ -96,8 +99,8 @@ void	PullMgr::push(const std::string& topic, const char* data, int len) {
 }
 
 void	PullMgr::run() {
-	if( m_pLooper ) {
-		m_pLooper->run();
+	if( m_pPuller ) {
+		m_pPuller->run();
 	}
 }
 

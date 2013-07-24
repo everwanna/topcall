@@ -7,6 +7,9 @@ struct PullConfig {
 	std::string name;
 	std::string ip;
 	int		port;
+
+	std::string mongo_ip;
+	short		mongo_port;
 };
 
 #endif

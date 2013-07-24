@@ -1,14 +1,25 @@
 #include "netpuller.h"
+#include "pullmgr.h"
+#include "mongolink.h"
 
-NetPuller::NetPuller(const std::string& mongo_ip, short mongo_port, short port) 
-	: m_nListener(0)
+NetPuller::NetPuller(PullMgr* mgr, const std::string& mongo_ip, short mongo_port, short port) 
+	: m_pMgr(mgr)
+	, m_nListener(0)
 	, m_nSocket(0)
 	, m_nPort(port)
 {	
+#ifdef WIN32
+	WSADATA WSAData;
+	WSAStartup(0x101, &WSAData);
+#else
+	if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
+		return (1);
+#endif
 	m_pBuffer = new char[NET_BUFFER_SIZE];
 }
 
 void	NetPuller::run() {
+	/*
 	struct sockaddr_in addr;
 	struct sockaddr_in peer;
 	int peer_len = sizeof(peer);
@@ -60,6 +71,7 @@ void	NetPuller::run() {
 			return;
 		}
 	}
+	*/
 
 	while(true) {
 		pull();
@@ -76,7 +88,7 @@ void	NetPuller::send(const char* data, int len) {
 }
 
 void	NetPuller::pull() {
-	
+	std::string msg = m_pMgr->getMongo()->fetch();
 }
 
 

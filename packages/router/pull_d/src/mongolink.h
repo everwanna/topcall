@@ -12,11 +12,12 @@ public:
 
 public:
 	int		connect(const std::string& ip, short port);
-	UInfo*	query(const std::string& passport);
+	std::string	fetch();
 
 private:
 	mongo	m_mongo;
 	std::string	m_strDBName;
+	bool	m_bConnected;
 };
 
 

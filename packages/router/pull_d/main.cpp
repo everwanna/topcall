@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[])
 {
-	char* inifile = "push_d.ini";
+	char* inifile = "pull_d.ini";
 
 	if( argc >= 2 ) {
 		inifile = argv[1];
@@ -19,9 +19,12 @@ int main(int argc, char* argv[])
 	}
 
 	PullConfig config;
-	config.name = ini.getString("push", "name");
-	config.ip = ini.getString("push", "ip");
-	config.port = ini.getInt("push", "port");	
+	config.name = ini.getString("pull", "name");
+	config.ip = ini.getString("pull", "ip");
+	config.port = ini.getInt("pull", "port");	
+
+	config.mongo_ip = ini.getString("mongo", "ip");
+	config.mongo_port = ini.getInt("mongo", "port");	
 
 	if( config.name.length() == 0 ||
 		config.ip.length() == 0 ||
