@@ -43,5 +43,5 @@ void	MsgHandler::onPushMsg(int linkid, Unpack* up) {
 	PPushMsg msg;
 	msg.unmarshall(*up);
 
-	m_pPushMgr->push(msg.topic, msg.payload);
+	m_pPushMgr->push(msg.topic, up->getBuf(), up->getLen() );
 }

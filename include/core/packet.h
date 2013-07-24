@@ -85,7 +85,7 @@ private:
 class Unpack
 {
 public:
-	Unpack(char* buf, int len) {
+	Unpack(const char* buf, int len) {
 		m_pBuf = buf;
 		m_nLen = len;
 		m_nPos = 0;
@@ -133,7 +133,7 @@ public:
 		return m_nLen - m_nPos;
 	}
 
-	char*	getBuf() {
+	const char*	getBuf() {
 		return m_pBuf;
 	}
 
@@ -145,7 +145,7 @@ public:
 	short	getUri() { return m_nUri; }
 
 private:
-	char*		m_pBuf;
+	const char*	m_pBuf;
 	int			m_nLen;
 	int			m_nPos;
 

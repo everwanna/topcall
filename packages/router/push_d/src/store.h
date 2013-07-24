@@ -22,7 +22,7 @@ public:
 	void	subscribe(Consumer* consumer, const std::string& topic);
 	void	unsubscribe(const std::string& name);
 	void	unsubscribe(const std::string& name, const std::string& topic);
-	void	push(const std::string& topic, const std::string& payload);
+	void	push(const std::string& topic, const char* data, int len);
 	void	dump();
 
 private:

@@ -27,7 +27,7 @@ public:
 	void	deleteTopic(const std::string& topic);
 	bool	hasTopic(const std::string& topic);
 
-	void	push(const std::string& topic, const std::string& payload);
+	void	push(const std::string& topic, const char* data, int len);
 	void	run();
 
 	void	onTimer();

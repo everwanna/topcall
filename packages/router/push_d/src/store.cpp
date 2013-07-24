@@ -78,7 +78,7 @@ void	Store::unsubscribe(const std::string& name, const std::string& topic) {
 	LOG(TAG_PUSH, "Store::subscribe, consumer %s for topic %d doesn't exist", name.c_str(), topic);
 }
 
-void	Store::push(const std::string& topic, const std::string& payload) {
+void	Store::push(const std::string& topic, const char* data, int len) {
 	if( !hasTopic(topic) ) {
 		LOG(TAG_PUSH, "Store::push, topic %s not found.", topic);
 		return;
@@ -87,7 +87,7 @@ void	Store::push(const std::string& topic, const std::string& payload) {
 	Consumer* consumer = NULL;
 	for( std::list<Consumer*>::iterator it = m_mapTopics[topic].begin(); it != m_mapTopics[topic].end(); it++ ) {
 		consumer = (*it);		
-		m_pPushMgr->getLooper()->send(consumer->getLinkId(), payload.c_str(), payload.length());
+		m_pPushMgr->getLooper()->send(consumer->getLinkId(), data, len);
 	}
 }
 

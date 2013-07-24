@@ -10,11 +10,12 @@ public:
 	~MsgHandler();
 
 public:
-	void	handle(int linkid, char* msg, int len);
+	void	handle(int linkid, const char* msg, int len);
 
 public:
 	void	onRegDispReq(int linkid, Unpack* up);
 	void	onSendReq(int linkid, Unpack* up);
+	void	onPushMsg(int linkid, Unpack* up);
 
 private:
 	RouteMgr*	m_pMgr;

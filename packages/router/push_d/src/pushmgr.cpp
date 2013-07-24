@@ -91,8 +91,8 @@ bool	PushMgr::hasTopic(const std::string& topic) {
 	return m_pStore->hasTopic(topic);
 }
 
-void	PushMgr::push(const std::string& topic, const std::string& payload) {
-	m_pStore->push(topic, payload);
+void	PushMgr::push(const std::string& topic, const char* data, int len) {
+	m_pStore->push(topic, data, len);
 }
 
 void	PushMgr::run() {

@@ -19,7 +19,7 @@ MsgHandler::~MsgHandler() {
 	}
 }
 
-void	MsgHandler::handle(int linkid, char* msg, int len) {
+void	MsgHandler::handle(int linkid, const char* msg, int len) {
 #ifdef _DEBUG
 	//LOG(TAG_MCENTER, "MsgHandler::handle, linkid=%d, len=%d", linkid, len);
 #endif
@@ -32,6 +32,9 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 		break;
 	case URI_SEND_REQ:
 		onSendReq(linkid, &up);
+		break;
+	case URI_PUSH_MSG:
+		onPushMsg(linkid, &up);
 		break;
 	}
 }
@@ -74,4 +77,11 @@ void	MsgHandler::onSendReq(int linkid, Unpack* up) {
 	m_pMgr->getLooper()->sendPush( pk.getBuf(), pk.getLen() );
 }
 
+void	MsgHandler::onPushMsg(int linkid, Unpack* up) {
+	PPushMsg req;
+	req.unmarshall(*up);
+
+	LOG(TAG_ROUTER, "push msg for topic : %s", req.topic.c_str());
+	handle(linkid, req.payload.c_str(), req.payload.length());
+}
 

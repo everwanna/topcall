@@ -20,8 +20,8 @@ enum {
 	URI_REGDISP_REQ			= 102,
 	URI_REGDISP_RES			= 103,
 
-	URI_ROUTER_SEND_REQ		= 201,
-	URI_ROUTER_SEND_RES		= 202,
+	//URI_ROUTER_SEND_REQ		= 201,
+	//URI_ROUTER_SEND_RES		= 202,
 };
 
 struct PLoginReq : Packet {	
@@ -239,6 +239,7 @@ struct PRegDispRes : Packet {
 	}
 };
 
+/*
 struct PRTSendReq : Packet {	
 	enum { uri=URI_ROUTER_SEND_REQ };
 
@@ -262,7 +263,7 @@ struct PRTSendReq : Packet {
 struct PRTSendRes : Packet {	
 	enum { uri=URI_ROUTER_SEND_RES };
 };
-
+*/
 
 }
 
