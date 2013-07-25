@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 	config.area = ini.getInt("login", "area");
 	config.disp_ip = ini.getString("dispatcher", "ip");
 	config.disp_port = ini.getInt("dispatcher", "port");
-	config.udb_name = ini.getString("udb", "name");
+	config.udb_name = ini.getString("udb", "dbname");
 	config.udb_ip = ini.getString("udb", "ip");
 	config.udb_port = ini.getInt("udb", "port");
 

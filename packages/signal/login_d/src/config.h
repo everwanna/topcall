@@ -32,8 +32,8 @@ extern "C" {
 #define TAG_LOGIN			"login - "
 #define NET_BUFFER_SIZE		1024*128
 #define TIMER_INTERVAL		1
-#define LINK_CHECK_INTERVAL	5
-#define LINK_EXPIRE			15
+#define LINK_CHECK_INTERVAL	10
+#define LINK_EXPIRE			30
 #define RECONN_INTERVAL		5
 #define MSG_RESEND_MAX		10
 

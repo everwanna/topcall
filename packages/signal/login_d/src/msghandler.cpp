@@ -12,6 +12,7 @@ MsgHandler::MsgHandler(LoginMgr* mgr)
 	: m_pLoginMgr(mgr)
 {
 	m_pBuffer = new char[1024];
+	m_pPack = new Pack();
 }
 
 MsgHandler::~MsgHandler() {
@@ -36,6 +37,9 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 		break;
 	case URI_SEND_REQ:
 		onSendReq(linkid, &up);
+		break;
+	case URI_PING:
+		onPing(linkid, &up);
 		break;
 	}
 }
@@ -80,10 +84,10 @@ void	MsgHandler::onLoginReq(int linkid, Unpack* up) {
 			m_pLoginMgr->getUidSync()->onAdd(res.uid);
 		}
 	}	
-	Pack pk(SVID_LOGIN, PLoginRes::uri);
-	res.marshall(pk);
-	pk.pack();
-	m_pLoginMgr->getLinkMgr()->send( linkid, pk.getBuf(), pk.getLen() );
+	m_pPack->reset(SVID_LOGIN, PLoginRes::uri);
+	res.marshall(*m_pPack);
+	m_pPack->pack();
+	m_pLoginMgr->getLinkMgr()->send( linkid, m_pPack->getBuf(), m_pPack->getLen() );
 
 	//save the uid to LinkMgr.
 	m_pLoginMgr->getLinkMgr()->setUid(req.uid, linkid);
@@ -109,5 +113,9 @@ void	MsgHandler::onSendReq(int linkid, Unpack* up) {
 		//send to dispatcher:
 		m_pLoginMgr->getLooper()->sendDispatcher(up->getBuf(), up->getLen());
 	}
+}
+
+void	MsgHandler::onPing(int linkid, Unpack* up) {
+	m_pLoginMgr->getLinkMgr()->update(linkid, m_pLoginMgr->getLooper()->getSystemTime());
 }
 

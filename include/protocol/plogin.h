@@ -13,15 +13,13 @@ enum {
 	URI_SEND_RES			= 4,
 	URI_SYNCUIDS_REQ		= 5,
 	URI_SYNCUIDS_RES		= 6,
-	URI_MULTILOGIN_NOTIFY	= 7,
+	URI_PING				= 7,
 
 	URI_REGPROXY_REQ		= 100,
 	URI_REGPROXY_RES		= 101,
 	URI_REGDISP_REQ			= 102,
 	URI_REGDISP_RES			= 103,
 
-	//URI_ROUTER_SEND_REQ		= 201,
-	//URI_ROUTER_SEND_RES		= 202,
 };
 
 struct PLoginReq : Packet {	
@@ -145,6 +143,7 @@ struct PSyncUidsReq : Packet {
 	}
 };
 
+/*
 struct PMutiLoginNotify : Packet {
 	enum { uri=URI_MULTILOGIN_NOTIFY };
 
@@ -173,6 +172,21 @@ struct PMutiLoginNotify : Packet {
 		pk.pushString( old_proxy );
 	}
 };
+*/
+
+struct PPing : Packet {
+	enum { uri=URI_PING };
+
+	int		uid;
+	virtual void	unmarshall(Unpack& up) {	
+		uid = up.popInt32();
+	}
+
+	virtual void	marshall(Pack& pk) {	
+		pk.pushInt32(uid);
+	}
+};
+
 
 struct PRegProxyReq : Packet {
 	enum { uri=URI_REGPROXY_REQ };
