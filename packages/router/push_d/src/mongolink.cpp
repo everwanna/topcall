@@ -31,7 +31,20 @@ int		MongoLink::connect(const std::string& ip, short port) {
 }
 
 void	MongoLink::save(const std::string& topic, const std::string& data) {
+	bson b[1];
 
+	bson_init(b);
+	bson_append_string( b, "data", data.c_str() );
+	bson_append_int( b, "status", 0 );
+	bson_finish( b );
+
+	int status = mongo_insert( &m_mongo, m_strDBName.c_str(), b, NULL );
+	if( status == MONGO_OK ) {
+	} else {
+		LOG(TAG_PUSH, "mongo insert failed with topic=%s", topic);
+	}
+
+	bson_destroy( b );
 }
 
 

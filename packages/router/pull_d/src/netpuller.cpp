@@ -40,7 +40,8 @@ void	NetPuller::connect() {
 	m_bConnected = true;
 }
 
-void	NetPuller::run() {	
+void	NetPuller::run() {
+	LOG(TAG_PULL, "netpull running now.");
 	if( !m_bConnected ) {
 		connect();
 	}
@@ -56,6 +57,7 @@ void	NetPuller::send(const char* data, int len) {
 	}
 
 	if( ::send(m_nSocket, data, len, 0) == -1 ) {
+		LOG(TAG_PULL, "netpuller send failed, m_nSocket=%d", m_nSocket);
 		::closesocket(m_nSocket);
 		connect();
 		send(data, len);
@@ -65,6 +67,10 @@ void	NetPuller::send(const char* data, int len) {
 
 void	NetPuller::pull() {
 	std::string msg = m_pMgr->getMongo()->fetch();
+
+	if( msg.length() == 0 )
+		return;
+
 	::send(m_nSocket, msg.c_str(), msg.length(), 0);
 }
 
