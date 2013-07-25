@@ -51,12 +51,8 @@ std::string	MongoLink::fetch() {
 		if ( bson_find( iterator, mongo_cursor_bson( cursor ), "data" ) != BSON_EOO ) {	
 			msg = bson_iterator_string(iterator);
 		} 
-
-	} else {
-		LOG(TAG_PULL, "query msg failed, db=%s.", m_strDBName.c_str());
 	}
 
-exit:
 	bson_destroy( query );
 	mongo_cursor_destroy( cursor );
 

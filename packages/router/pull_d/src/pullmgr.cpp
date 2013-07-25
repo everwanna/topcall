@@ -9,10 +9,10 @@
 PullMgr::PullMgr(PullConfig& config) 
 	: m_config(config)
 {
-	m_pPuller = new NetPuller(this, config.mongo_ip, config.mongo_port, config.port);
+	m_pPuller = new NetPuller(this, config.router_ip, config.router_port, config.mongo_ip, config.mongo_port);
 	m_pHandler = new MsgHandler(this);
 	m_pStore = new Store(this);
-	m_pMongo = new MongoLink("udb.push_d_1");
+	m_pMongo = new MongoLink(m_config.mongo_dbname);
 	m_pMongo->connect( config.mongo_ip.c_str(), config.mongo_port);
 }
 

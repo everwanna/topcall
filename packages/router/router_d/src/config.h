@@ -31,7 +31,7 @@ extern "C" {
 #include <mongo.h>
 }
 
-#define TAG_ROUTER		"dispatcher - "
+#define TAG_ROUTER			"router - "
 #define NET_BUFFER_SIZE		1024*128
 #define TIMER_INTERVAL		1
 #define LINK_CHECK_INTERVAL	5

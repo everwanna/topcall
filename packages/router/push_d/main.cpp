@@ -23,6 +23,11 @@ int main(int argc, char* argv[])
 	config.ip = ini.getString("push", "ip");
 	config.port = ini.getInt("push", "port");	
 
+	config.mongo_enable = ini.getInt("mongo", "enable");
+	config.mongo_dbname = ini.getString("mongo", "dbname");
+	config.mongo_ip = ini.getString("mongo", "ip");
+	config.mongo_port = ini.getInt("mongo", "port");	
+
 	if( config.name.length() == 0 ||
 		config.ip.length() == 0 ||
 		config.port == 0) {

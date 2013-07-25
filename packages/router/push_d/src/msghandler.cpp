@@ -1,5 +1,7 @@
 #include "msghandler.h"
 #include "pushmgr.h"
+#include "pushconfig.h"
+#include "mongolink.h"
 
 MsgHandler::MsgHandler(PushMgr* mgr) {
 	m_pPushMgr = mgr;
@@ -43,5 +45,9 @@ void	MsgHandler::onPushMsg(int linkid, Unpack* up) {
 	PPushMsg msg;
 	msg.unmarshall(*up);
 
-	m_pPushMgr->push(msg.topic, up->getBuf(), up->getLen() );
+	if( m_pPushMgr->getConfig()->mongo_enable == 0 ) {
+		m_pPushMgr->push(msg.topic, up->getBuf(), up->getLen() );
+	} else {
+		m_pPushMgr->getMongo()->save( msg.topic, msg.payload);
+	}
 }

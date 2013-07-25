@@ -13,7 +13,7 @@ RouteMgr::RouteMgr(const RouteConfig& config)
 		m_config.port);
 	m_pHandler = new MsgHandler(this);
 	m_pLinkMgr = new LinkMgr();
-	m_pMongoLink = new MongoLink("udb.online");
+	m_pMongoLink = new MongoLink(config.oldb_dbname);
 	m_pMongoLink->connect(config.oldb_ip, config.oldb_port);
 	m_nSeq = 0;
 }

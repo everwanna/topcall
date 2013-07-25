@@ -54,13 +54,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\..\..\depends\libevent\include;..\..\..\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\..\..\depends\libevent\include;..\..\..\depends\libmongo\include;..\..\..\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libevent.lib;ws2_32.lib;Advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\depends\libevent\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libevent.lib;libmongo.lib;ws2_32.lib;Advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\depends\libevent\lib;..\..\..\depends\libmongo\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,6 +83,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\inifile.cpp" />
+    <ClCompile Include="src\mongolink.cpp" />
     <ClCompile Include="src\msghandler.cpp" />
     <ClCompile Include="src\netloop.cpp" />
     <ClCompile Include="src\pushmgr.cpp" />
@@ -92,6 +93,7 @@
     <ClInclude Include="src\config.h" />
     <ClInclude Include="src\consumer.h" />
     <ClInclude Include="src\inifile.h" />
+    <ClInclude Include="src\mongolink.h" />
     <ClInclude Include="src\msghandler.h" />
     <ClInclude Include="src\netloop.h" />
     <ClInclude Include="src\pushconfig.h" />

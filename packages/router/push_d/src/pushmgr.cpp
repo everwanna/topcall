@@ -3,6 +3,7 @@
 #include "netloop.h"
 #include "msghandler.h"
 #include "consumer.h"
+#include "mongolink.h"
 
 
 PushMgr::PushMgr(PushConfig& config) 
@@ -11,6 +12,9 @@ PushMgr::PushMgr(PushConfig& config)
 	m_pLooper = new NetLoop(this, m_config.port);
 	m_pHandler = new MsgHandler(this);
 	m_pStore = new Store(this);
+
+	m_pMongo = new MongoLink(m_config.mongo_dbname);
+	m_pMongo->connect( config.mongo_ip.c_str(), config.mongo_port);
 }
 
 PushMgr::~PushMgr() {
@@ -30,11 +34,11 @@ int		PushMgr::registerConsumer(int linkid, const std::string& name, const std::s
 	Consumer* consumer = NULL;
 
 	if( !hasTopic(topic) ) {
-		LOG(TAG_PUSH, "PushMgr.registerConsumer, topic doesn't exist, create topic %d", topic);
+		LOG(TAG_PUSH, "PushMgr.registerConsumer, topic doesn't exist, create topic %s", topic.c_str());
 		createTopic(topic);
 		
 		if( !hasTopic(topic) ) {
-			LOG(TAG_PUSH, "PushMgr.registerConsumer, topic doesn't exist, topic=%d, FAIL!!!@", topic);			
+			LOG(TAG_PUSH, "PushMgr.registerConsumer, topic doesn't exist, topic=%s, FAIL!!!@", topic.c_str());			
 			return RES_FAIL;
 		}
 	}

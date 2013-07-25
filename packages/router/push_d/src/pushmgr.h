@@ -13,6 +13,7 @@ class Producer;
 class Consumer;
 class Store;
 class Msg;
+class MongoLink;
 
 class PushMgr {
 public:
@@ -35,11 +36,14 @@ public:
 public:
 	MsgHandler*	getHandler() { return m_pHandler; }
 	NetLoop*	getLooper() { return m_pLooper; }
+	MongoLink*	getMongo() { return m_pMongo; }
+	PushConfig*	getConfig() { return &m_config; }
 
 private:
 	NetLoop*	m_pLooper;
 	MsgHandler*	m_pHandler;
 	Store*		m_pStore;
+	MongoLink*	m_pMongo;
 	std::map<std::string, Consumer*>	m_mapConsumers;
 	PushConfig	m_config;
 };

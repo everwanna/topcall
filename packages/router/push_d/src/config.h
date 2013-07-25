@@ -13,6 +13,10 @@ extern "C" {
 	#include <event2/listener.h>
 	#include <event2/buffer.h>
 	#include <event2/bufferevent.h>
+
+	#define MONGO_USE__INT64
+	#define MONGO_STATIC_BUILD
+	#include <mongo.h>
 }
 
 #define TAG_PUSH			"push - "

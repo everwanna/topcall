@@ -14,29 +14,20 @@ int main(int argc, char* argv[])
 
 	IniFile ini(inifile);
 	if( ini.load() != 0 ) {
-		LOG(TAG_PULL, "push_d, fail to open %s.", inifile);
+		LOG(TAG_PULL, "pull_d, fail to open %s.", inifile);
 		return -1;
 	}
 
-	PullConfig config;
-	config.name = ini.getString("pull", "name");
-	config.ip = ini.getString("pull", "ip");
-	config.port = ini.getInt("pull", "port");	
+	PullConfig config;	
+	config.router_ip = ini.getString("router", "ip");
+	config.router_port = ini.getInt("router", "port");	
 
+	config.mongo_dbname = ini.getString("mongo", "dbname");
 	config.mongo_ip = ini.getString("mongo", "ip");
 	config.mongo_port = ini.getInt("mongo", "port");	
 
-	if( config.name.length() == 0 ||
-		config.ip.length() == 0 ||
-		config.port == 0) {
-		LOG(TAG_PULL, "push_d, the config file is invalid.");
-		return -1;
-	}
-
-	LOG(TAG_PULL, "push_d, running at configuration: ");
-	LOG(TAG_PULL, "	name    = %s ", config.name.c_str());
-	LOG(TAG_PULL, "	ip      = %s ", config.ip.c_str());
-	LOG(TAG_PULL, "	port    = %d ", config.port);
+	LOG(TAG_PULL, "pull_d, running at configuration: ");
+	LOG(TAG_PULL, "	router    = %s ", config.router_ip.c_str());
 
 	PullMgr* mgr = new PullMgr(config);
 	mgr->run();

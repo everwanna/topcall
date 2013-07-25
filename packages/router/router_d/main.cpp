@@ -29,6 +29,7 @@ int main(int argc, char* argv[])
 	config.push_ip = ini.getString("push", "ip");
 	config.push_port = ini.getInt("push", "port");
 
+	config.oldb_dbname = ini.getString("oldb", "dbname");
 	config.oldb_ip = ini.getString("oldb", "ip");
 	config.oldb_port = ini.getInt("oldb", "port");
 

@@ -4,10 +4,10 @@
 #include <string>
 
 struct PullConfig {
-	std::string name;
-	std::string ip;
-	int		port;
-
+	std::string router_ip;
+	short		router_port;
+	
+	std::string mongo_dbname;
 	std::string mongo_ip;
 	short		mongo_port;
 };
