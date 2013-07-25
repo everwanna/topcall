@@ -16,6 +16,8 @@ enum {
 	URI_PING				= 7,
 	URI_SENDMUTI_REQ		= 8,
 	URI_SENDMUTI_RES		= 9,
+	URI_QUERYJSON_REQ		= 10,
+	URI_QUERYJSON_RES		= 11,
 
 	URI_REGPROXY_REQ		= 100,
 	URI_REGPROXY_RES		= 101,
@@ -189,6 +191,29 @@ struct PPing : Packet {
 	}
 };
 
+struct PQueryJsonReq : Packet {
+	enum { uri=URI_QUERYJSON_REQ };
+	
+	virtual void	unmarshall(Unpack& up) {			
+	}
+
+	virtual void	marshall(Pack& pk) {	
+		
+	}
+};
+
+struct PQueryJsonRes : Packet {
+	enum { uri=URI_QUERYJSON_RES };
+
+	std::string json;
+	virtual void	unmarshall(Unpack& up) {	
+		json = up.popString();
+	}
+
+	virtual void	marshall(Pack& pk) {	
+		pk.pushString(json);
+	}
+};
 
 struct PRegProxyReq : Packet {
 	enum { uri=URI_REGPROXY_REQ };

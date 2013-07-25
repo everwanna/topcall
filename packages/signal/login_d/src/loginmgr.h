@@ -12,6 +12,7 @@ class MongoLink;
 class MsgResender;
 class Seq;
 class UidSync;
+class StatMgr;
 class LoginMgr {
 public:
 	LoginMgr(const LoginConfig& config);
@@ -36,6 +37,7 @@ public:
 	inline MsgResender*	getResender() { return m_pResender; }
 	inline Seq*			getSeq() { return m_pSeq; }
 	inline UidSync*		getUidSync() { return m_pUidSync; }
+	inline StatMgr*		getStatMgr() { return m_pStatMgr; }
 	inline LoginConfig*	getConfig() { return &m_config; }		//yeah, take care here.
 
 private:
@@ -47,6 +49,7 @@ private:
 	MsgResender*m_pResender;
 	Seq*		m_pSeq;
 	UidSync*	m_pUidSync;
+	StatMgr*	m_pStatMgr;
 	LoginConfig	m_config;
 	int			m_nSeq;
 	std::string	m_strRouter;

@@ -4,6 +4,7 @@
 #include "loginmgr.h"
 #include "seq.h"
 #include "uidsync.h"
+#include "statmgr.h"
 #include <vector>
 
 LinkMgr::LinkMgr(LoginMgr* mgr)
@@ -76,6 +77,7 @@ void	LinkMgr::removeExpire(int time) {
 
 			//tell uid sync:
 			m_pLoginMgr->getUidSync()->onRemvoe(link->uid);
+			m_pLoginMgr->getStatMgr()->onUserLogout();
 		}
 	}
 

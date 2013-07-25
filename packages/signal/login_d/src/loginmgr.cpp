@@ -6,6 +6,7 @@
 #include "msgresender.h"
 #include "seq.h"
 #include "uidsync.h"
+#include "statmgr.h"
 
 LoginMgr::LoginMgr(const LoginConfig& config)
 	: m_config(config)
@@ -18,6 +19,7 @@ LoginMgr::LoginMgr(const LoginConfig& config)
 	m_pResender = new MsgResender(this);
 	m_pSeq = new Seq();
 	m_pUidSync = new UidSync(this);
+	m_pStatMgr = new StatMgr();
 
 	m_nSeq = 0;
 }

@@ -7,7 +7,7 @@ class Pack
 {
 public:
 	Pack() {
-		m_pBuf = NULL;
+		m_pBuf = new char[8096];
 		m_nLen = 0;
 		m_nPos = 8;
 

@@ -5,6 +5,8 @@
 #include "mongolink.h"
 #include "uinfo.h"
 #include "uidsync.h"
+#include "statmgr.h"
+#include <sstream>
 
 using namespace login;
 
@@ -40,6 +42,9 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 		break;
 	case URI_PING:
 		onPing(linkid, &up);
+		break;
+	case URI_QUERYJSON_REQ:
+		onQueryJsonReq(linkid, &up);
 		break;
 	}
 }
@@ -82,6 +87,7 @@ void	MsgHandler::onLoginReq(int linkid, Unpack* up) {
 
 			//add to uid sync:
 			m_pLoginMgr->getUidSync()->onAdd(res.uid);
+			m_pLoginMgr->getStatMgr()->onUserLogin();
 		}
 	}	
 	m_pPack->reset(SVID_LOGIN, PLoginRes::uri);
@@ -118,4 +124,21 @@ void	MsgHandler::onSendReq(int linkid, Unpack* up) {
 void	MsgHandler::onPing(int linkid, Unpack* up) {
 	m_pLoginMgr->getLinkMgr()->update(linkid, m_pLoginMgr->getLooper()->getSystemTime());
 }
+
+
+void	MsgHandler::onQueryJsonReq(int linkid, Unpack* up) {
+	std::stringstream ss;
+	ss<<"{";
+	ss<<"users:"<<m_pLoginMgr->getStatMgr()->getUserCount();
+	ss<<"}";
+
+	PQueryJsonRes res;	
+	res.json = ss.str();
+	m_pPack->reset(SVID_LOGIN, PQueryJsonRes::uri);
+	res.marshall(*m_pPack);
+	m_pPack->pack();
+
+	m_pLoginMgr->getLinkMgr()->send( linkid, m_pPack->getBuf(), m_pPack->getLen() );
+}
+
 

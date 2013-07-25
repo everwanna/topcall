@@ -92,6 +92,7 @@
     <ClCompile Include="src\netlistener.cpp" />
     <ClCompile Include="src\netloop.cpp" />
     <ClCompile Include="src\seq.cpp" />
+    <ClCompile Include="src\statmgr.cpp" />
     <ClCompile Include="src\uidsync.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +111,7 @@
     <ClInclude Include="src\netlistener.h" />
     <ClInclude Include="src\netloop.h" />
     <ClInclude Include="src\seq.h" />
+    <ClInclude Include="src\statmgr.h" />
     <ClInclude Include="src\uidsync.h" />
     <ClInclude Include="src\uinfo.h" />
   </ItemGroup>
