@@ -9,7 +9,7 @@ Msg::Msg() {
 Msg::~Msg() {
 }
 
-void	Msg::assign(char* buf, int len) {
+void	Msg::assign(const char* buf, int len) {
 	if( m_nCapacity < len ) {
 		LOG(TAG_MPROXY, "Msg::assign, m_nCapacity<len, m_nCapacity=%d, len=%d", m_nCapacity, m_nLen);
 		return;

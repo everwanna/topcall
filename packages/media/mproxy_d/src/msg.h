@@ -9,7 +9,7 @@ public:
 	~Msg();
 
 public:
-	void	assign(char* buf, int len);
+	void	assign(const char* buf, int len);
 
 public:
 	const char*	data() { return m_pData; }
