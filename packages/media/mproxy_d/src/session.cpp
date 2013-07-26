@@ -39,3 +39,10 @@ void	Session::onMsg(int linkid, int sid, int from, Msg* msg) {
 		::sendto(linkid, msg->data(), msg->len(), 0, (const sockaddr*)&uinfo->addr, sizeof(uinfo->addr));
 	}
 }
+
+void	Session::getUsers(std::vector<UserMiniInfo> & users) const {
+	for (std::map<int, UInfo*>::const_iterator it = m_mapUsers.begin(); it != m_mapUsers.end(); ++it) {
+		UserMiniInfo user(it->first, it->second->nick);			
+		users.push_back(user);
+	}
+}

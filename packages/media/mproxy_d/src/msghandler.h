@@ -21,6 +21,9 @@ public:
 	void	onMPResendReq(int linkid, const sockaddr_in* peer_addr, Unpack* up);
 
 private:
+	void	onMPRejectInvite(int linkid, const sockaddr_in* peer_addr, Unpack* up);
+
+private:
 	MPMgr*	m_pMPMgr;
 };
 

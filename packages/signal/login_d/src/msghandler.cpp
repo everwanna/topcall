@@ -45,6 +45,8 @@ void	MsgHandler::handle(int linkid, char* msg, int len) {
 		break;
 	case URI_QUERYJSON_REQ:
 		onQueryJsonReq(linkid, &up);
+	case URI_VCALL_CREATE_ROOM_REQ:
+		onCreateRoomReq(linkid, &up);
 		break;
 	}
 }
@@ -97,6 +99,19 @@ void	MsgHandler::onLoginReq(int linkid, Unpack* up) {
 
 	//save the uid to LinkMgr.
 	m_pLoginMgr->getLinkMgr()->setUid(req.uid, linkid);
+}
+
+void MsgHandler::onCreateRoomReq(int linkid, Unpack* up) {
+	PVCallCreateRoomReq req;
+	req.unmarshall(*up);
+
+	LOG(TAG_LOGIN, "received create room request from user %d.", req.creator);
+	//verify the uid is from the right link:
+	if( !m_pLoginMgr->getLinkMgr()->check( req.uid, linkid) ) {
+		LOG(TAG_LOGIN, "uid and linkid doesn't match, uid=%d, linkid=%d, while creating room.", req.uid, linkid);
+		return;
+	}
+	m_pLoginMgr->getLooper()->sendDispatcher(up->getBuf(), up->getLen());
 }
 
 void	MsgHandler::onSendReq(int linkid, Unpack* up) {

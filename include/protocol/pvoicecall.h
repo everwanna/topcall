@@ -2,12 +2,38 @@
 #define _PVOICECALL_H_
 
 #include "core/packet.h"
+#include <vector>
 
 #define URI_VCALL_INVITE_REQ		100
 #define URI_VCALL_INVITE_RES		101
 
 #define URI_VCALL_JOIN_REQ		102
 #define URI_VCALL_JOIN_RES		103
+
+enum room_uri {
+	URI_ROUTE_SERVICE			= 10000,
+	URI_VCALL_CREATE_ROOM_REQ	=	1104,
+};
+
+struct PVCallCreateRoomReq : Packet {
+	enum {uri = URI_VCALL_CREATE_ROOM_REQ};
+	int creator;
+	std::vector<int> invitees;
+	std::string nick;
+
+	virtual void	unmarshall(Unpack& up) {
+		creator = up.popInt32();
+		unmarshallList(up, invitees);
+		nick = up.popString();		
+	}
+
+	virtual void	marshall(Pack& pk) {
+		pk.pushInt32(creator);
+		marshallList(pk, invitees);
+		pk.pushString(nick);		
+	}
+};
+
 
 struct PVCallInviteReq : Packet {
 	enum { uri=URI_VCALL_INVITE_REQ };

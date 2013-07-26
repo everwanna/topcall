@@ -52,12 +52,33 @@ void	MsgHandler::handle(int linkid, const sockaddr_in* peer_addr, char* msg, int
 	case PMPResendReq::uri:
 		onMPResendReq(linkid, peer_addr, &up);
 		break;
+	case PMPRejectInvite::uri:
+		onMPRejectInvite(linkid, peer_addr, &up);
+		break;
 	default:
 		LOG(TAG_MPROXY, "MsgHandler::handle, unknown package, svid=%d, uri=%d", up.getSvid(), up.getUri());
 		//[TBD]
 		//should consider the blacklist.
 		break;
 	}
+}
+
+void MsgHandler::onMPRejectInvite(int linkid, const sockaddr_in* peer_addr, Unpack* up) {
+	PMPRejectInvite req;
+	req.unmarshall(*up);
+
+	LOG(TAG_MPROXY, "MsgHandler::onMPRejectInvite, linkid %d, sid %d, uid %d", linkid, req.sid, req.uid);
+	Session * session = m_pMPMgr->getSessMgr()->getSession(req.sid);
+	if (session == NULL)
+	{
+		return ;
+	}
+
+	//TODO: save reject state in session, let everyone know the guy
+
+	Msg msg;
+	msg.assign(up->getBuf(), up->getLen());
+	session->onMsg(linkid, req.sid, req.uid, &msg);
 }
 
 void	MsgHandler::onCreateReq(int linkid, const sockaddr_in* peer_addr, Unpack* up) {
@@ -113,9 +134,23 @@ void	MsgHandler::onMPJoinReq(int linkid, const sockaddr_in* peer_addr, Unpack* u
 
 	res.res = rc;	
 	res.sid = session->getSid();
-	res.uid = req.uid;	
+	res.uid = req.uid;
+	session->getUsers(res.onlineUsers);
 
 	LOG(TAG_MPROXY, "MsgHandler::onMPJoinReq, res/sid/uid/nick=%d, %d, %d, %s", rc, res.sid, res.uid, req.nick.c_str());
+
+	// tell users in the room that this guy has been here.
+	PMPNotifyJoined joined;
+	joined.sid = req.sid;
+	joined.uid = req.uid;
+	joined.nickname = req.nick;
+	Pack pk(SVID_MPROXY, PMPNotifyJoined::uri);
+	joined.marshall(pk);
+	pk.pack();
+
+	Msg msg;
+	msg.assign(pk.getBuf(), pk.getLen());
+	session->onMsg(linkid, req.sid, req.uid, &msg);
 
 exit:
 	Pack pk(SVID_MPROXY, PMPJoinRes::uri);
@@ -132,14 +167,46 @@ void	MsgHandler::onMPLeaveReq(int linkid, const sockaddr_in* peer_addr, Unpack* 
 	req.unmarshall(*up);
 	
 	//[TBD] should validate the uid.
+	Session * session = m_pMPMgr->getSessMgr()->getSession(req.sid);
+	if (session == NULL)
+	{
+		return ;
+	}
 	
+	// tell everyone this guy exit
+	PMPNotifyLeft left;
+	left.sid = req.sid;
+	left.uid = req.uid;
+	left.nickname = req.nick;
+	left.code = 0;
+	Pack pk(SVID_MPROXY, PMPNotifyLeft::uri);
+	left.marshall(pk);
+	pk.pack();
+
+	Msg msg;
+	msg.assign(pk.getBuf(), pk.getLen());
+	session->onMsg(linkid, req.sid, req.uid, &msg);
 }
 
 void	MsgHandler::onMPPing(int linkid, const sockaddr_in* peer_addr, Unpack* up) {
 	PMPPing ping;
 	ping.unmarshall(*up);
 	
-	
+	Session * session = m_pMPMgr->getSessMgr()->getSession(ping.sid);
+	if( session == NULL ) {
+		LOG(TAG_MPROXY, "MsgHandler::onMPPing, session not found for sid=%d, stream=%s.", ping.sid, ping.stream.c_str());
+		// TODO: stat ping no session
+		return ;
+	}
+
+	PMPPong pong;
+	pong.sid = session->getSid();
+	pong.from = ping.from;
+	session->getUsers(pong.users);
+	Pack pk(SVID_MPROXY, PMPPong::uri);
+	pong.marshall(pk);
+	pk.pack();
+	m_pMPMgr->getLooper()->send(linkid, peer_addr, pk.getBuf(), pk.getLen());
 }
 
 void	MsgHandler::onMPStreamData(int linkid, const sockaddr_in* peer_addr, Unpack* up) {

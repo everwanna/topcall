@@ -20,6 +20,7 @@
 #include <core/isp.h>
 
 #include <protocol/plogin.h>
+#include <protocol/pvoicecall.h>
 
 extern "C" {
 	#include <event2/event.h>

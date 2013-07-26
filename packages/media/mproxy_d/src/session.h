@@ -18,6 +18,7 @@ public:
 
 public:
 	int		getSid() { return m_nSid; }
+	void	getUsers(std::vector<UserMiniInfo> & users) const;
 
 private:
 	SessMgr*	m_pSessMgr;

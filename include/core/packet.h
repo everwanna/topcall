@@ -176,6 +176,21 @@ struct Packet
 	virtual ~Packet(){}
 	virtual void	unmarshall(Unpack up){}
 	virtual void	marshall(Pack pk){}
+
+	static void marshallList(Pack & pk, const std::vector<int>& list)	{
+		size_t count = list.size();
+		pk.pushInt16(static_cast<short>(count));
+		for (int i = 0; i < count; ++i) {
+			pk.pushInt32(list[i]);
+		}
+	}
+
+	static void unmarshallList(Unpack& up, std::vector<int>& list) {
+		size_t count = up.popInt16();
+		for (size_t i = 0; i < count; ++i) {
+			list.push_back(up.popInt32());
+		}
+	}
 };
 
 #endif

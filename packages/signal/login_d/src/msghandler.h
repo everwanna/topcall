@@ -18,6 +18,7 @@ public:
 	void	onSendReq(int linkid, Unpack* up);
 	void	onPing(int linkid, Unpack* up);
 	void	onQueryJsonReq(int linkid, Unpack* up);
+	void	onCreateRoomReq(int linkid, Unpack* up);
 
 private:
 	LoginMgr*	m_pLoginMgr;

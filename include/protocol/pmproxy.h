@@ -2,6 +2,7 @@
 #define PMPROXY_H
 
 #include "core/packet.h"
+#include <vector>
 
 #define URI_MPROXY_CREATE_REQ			1
 #define URI_MPROXY_CREATE_RES			2
@@ -12,10 +13,14 @@
 #define URI_MPROXY_LEAVE_RES			8
 #define URI_MPROXY_STREAM_EVENT			9
 #define URI_MPROXY_PING					10
+#define URI_MPROXY_PONG					11
 
 #define URI_MPROXY_STREAM_DATA			100
 #define URI_MPROXY_STREAM_DATA2			101
 #define URI_MPROXY_RESEND_REQ			102
+
+#define URI_MPROXY_NOTIFY_JOINED		1100
+#define URI_MPROXY_REJECT_INVITE		1101
 
 struct PMPCreateReq : Packet {
 	enum { uri=URI_MPROXY_CREATE_REQ };
@@ -62,6 +67,24 @@ struct PMPCreateRes : Packet {
 	}
 };
 
+struct PMPRejectInvite : Packet {
+	enum { uri = URI_MPROXY_REJECT_INVITE };
+	int sid;
+	int uid;
+	int nickname;
+
+	virtual void unmarshall(Unpack & up) {
+		sid = up.popInt32();
+		uid = up.popInt32();
+		nickname = up.popString();
+	}
+	virtual void marshall(Pack& pk) {
+		pk.pushInt32(sid);
+		pk.pushInt32(uid);
+		pk.pushString(nickname);
+	}
+};
+
 struct PMPJoinReq : Packet {
 	enum { uri=URI_MPROXY_JOIN_REQ };
 	
@@ -84,39 +107,85 @@ struct PMPJoinReq : Packet {
 	}
 };
 
+struct UserMiniInfo {
+	int uid;
+	std::string nickname;
+
+	UserMiniInfo() {}
+	UserMiniInfo(int u, const std::string & n)
+		: uid(u)
+		, nickname(n)
+	{}
+
+	void marshall(Pack& pk) const {
+		pk.pushInt32(uid);
+		pk.pushString(nickname);
+	}
+	void unmarshall(Unpack & up) {
+		uid = up.popInt32();
+		nickname = up.popString();
+	}
+
+	static void marshallList(Pack& pk, const std::vector<UserMiniInfo> & list) {
+		size_t count = list.size();
+		pk.pushInt16( static_cast<short>(count));
+		for (int i = 0; i < count; i++)
+		{
+			list[i].marshall(pk);
+		}
+	}
+	static void unmarshallList(Unpack& up, std::vector<UserMiniInfo> & list) {
+		size_t count = up.popInt16();
+		for (int i = 0; i < count; i++)
+		{
+			UserMiniInfo user;
+			user.unmarshall(up);
+			list.push_back(user);
+		}
+	}
+};
+
 struct PMPJoinRes : Packet {
 	enum { uri=URI_MPROXY_JOIN_RES };
 	
 	int			res;
 	int			sid;
-	int			uid;	
+	int			uid;
+	std::vector<UserMiniInfo> onlineUsers;
 	
 	virtual void	unmarshall(Unpack& up) {
 		res = up.popInt32();
 		sid = up.popInt32();
 		uid = up.popInt32();
+
+		UserMiniInfo::unmarshallList(up, onlineUsers);
 	}
 
 	virtual void	marshall(Pack& pk) {
 		pk.pushInt32(res);
 		pk.pushInt32(sid);
-		pk.pushInt32(uid);		
+		pk.pushInt32(uid);
+
+		UserMiniInfo::marshallList(pk, onlineUsers);
 	}
 };
 
 struct PMPLeaveReq : Packet {
 	enum { uri=URI_MPROXY_LEAVE_REQ };
 	
+	int			sid;
 	int			uid;
 	std::string	nick;
 	std::string	stream;
 	virtual void	unmarshall(Unpack& up) {
+		sid = up.popInt32();
 		uid = up.popInt32();
 		nick = up.popString();
 		stream = up.popString();
 	}
 
 	virtual void	marshall(Pack& pk) {
+		pk.pushInt32(sid);
 		pk.pushInt32(uid);
 		pk.pushString(nick);
 		pk.pushString(stream);
@@ -182,6 +251,66 @@ struct PMPPing : Packet {
 	virtual void	marshall(Pack& pk) {		
 		pk.pushInt32(sid);
 		pk.pushInt32(from);				
+	}
+};
+
+struct PMPPong : Packet {
+	enum { uri = URI_MPROXY_PONG };
+	int sid;
+	int from;
+	std::vector<UserMiniInfo> users;
+
+	virtual void unmarshall(Unpack& up) {
+		sid = up.popInt32();
+		from = up.popInt32();
+		UserMiniInfo::unmarshallList(up, users);
+	}
+
+	virtual void marshall(Pack& pk) {
+		pk.pushInt32(sid);
+		pk.pushInt32(from);
+		UserMiniInfo::marshallList(pk, users);
+	}
+};
+
+struct PMPNotifyJoined : Packet {
+	enum { uri = URI_MPROXY_NOTIFY_JOINED };
+	int sid;
+	int uid;
+	std::string nickname;
+
+	virtual void unmarshall(Unpack & up) {
+		sid = up.popInt32();
+		uid = up.popInt32();
+		nickname = up.popString();
+	}
+
+	virtual void marshall(Pack & pk) {
+		pk.pushInt32(sid);
+		pk.pushInt32(uid);
+		pk.pushString(nickname);
+	}
+};
+
+struct PMPNotifyLeft : Packet {
+	enum { uri = URI_MPROXY_NOTIFY_LEFT };
+	int sid;
+	int uid;
+	std::string nickname;
+	char code;
+
+	virtual void marshall(Pack& pk) {
+		pk.pushInt32(sid);
+		pk.pushInt32(uid);
+		pk.pushString(nickname);
+		pk.pushInt8(code);
+	}
+
+	virtual void unmarshall(Unpack& up) {
+		sid = up.popInt32();
+		uid = up.popInt32();
+		nickname = up.popString();
+		code = up.popInt8();
 	}
 };
 
