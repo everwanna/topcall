@@ -8,7 +8,7 @@
 void usage();
 int main(int argc, char* argv[])
 {
-	char* inifile = "mproxy_d.ini";
+	const char* inifile = "mproxy_d.ini";
 
 	if( argc >= 2 ) {
 		inifile = argv[1];

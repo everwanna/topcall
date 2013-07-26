@@ -4,7 +4,7 @@
 
 int main(int argc, char* argv[])
 {
-	char* inifile = "login_d.ini";
+	const char* inifile = "login_d.ini";
 
 	if( argc >= 2 ) {
 		inifile = argv[1];

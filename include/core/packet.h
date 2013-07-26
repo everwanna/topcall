@@ -1,7 +1,9 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include <cstring>
 #include <string>
+#include <vector>
 
 class Pack
 {

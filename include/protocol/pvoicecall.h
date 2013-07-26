@@ -17,18 +17,18 @@ enum room_uri {
 
 struct PVCallCreateRoomReq : Packet {
 	enum {uri = URI_VCALL_CREATE_ROOM_REQ};
-	int creator;
+	int uid;
 	std::vector<int> invitees;
 	std::string nick;
 
 	virtual void	unmarshall(Unpack& up) {
-		creator = up.popInt32();
+		uid = up.popInt32();
 		unmarshallList(up, invitees);
 		nick = up.popString();		
 	}
 
 	virtual void	marshall(Pack& pk) {
-		pk.pushInt32(creator);
+		pk.pushInt32(uid);
 		marshallList(pk, invitees);
 		pk.pushString(nick);		
 	}
@@ -55,7 +55,7 @@ struct PVCallInviteReq : Packet {
 };
 
 struct PVCallInviteRes : Packet {
-	enum { uri=URI_MPROXY_PUBLIC_RES };
+	enum { uri=URI_VCALL_INVITE_RES };
 	
 	int		inviter;
 	int		invitee;

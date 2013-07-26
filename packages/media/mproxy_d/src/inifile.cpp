@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <cstdlib>
 
 IniFile::IniFile(const std::string& filename) : m_strFileName(filename) {
 }

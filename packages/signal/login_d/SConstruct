@@ -1,5 +1,5 @@
 env = Environment()
-flags=env.ParseFlags( ' -I../../../include '  ' -I./ '  ' -I./src ')
+flags=env.ParseFlags( ' -I../../../include '  ' -I./ '  ' -I./src ' ' -I../../../depends/libmongo/include' ' -DMONGO_USE_LONG_LONG_INT' ' -L../../../depends/libmongo/lib' ' -lmongo')
 for k,v in sorted(flags.items()):
 	if v:
 		print k,v

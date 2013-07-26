@@ -138,20 +138,20 @@ void	MsgHandler::onMPJoinReq(int linkid, const sockaddr_in* peer_addr, Unpack* u
 	session->getUsers(res.onlineUsers);
 
 	LOG(TAG_MPROXY, "MsgHandler::onMPJoinReq, res/sid/uid/nick=%d, %d, %d, %s", rc, res.sid, res.uid, req.nick.c_str());
+	{
+		// tell users in the room that this guy has been here.
+		PMPNotifyJoined joined;
+		joined.sid = req.sid;
+		joined.uid = req.uid;
+		joined.nickname = req.nick;
+		Pack pk(SVID_MPROXY, PMPNotifyJoined::uri);
+		joined.marshall(pk);
+		pk.pack();
 
-	// tell users in the room that this guy has been here.
-	PMPNotifyJoined joined;
-	joined.sid = req.sid;
-	joined.uid = req.uid;
-	joined.nickname = req.nick;
-	Pack pk(SVID_MPROXY, PMPNotifyJoined::uri);
-	joined.marshall(pk);
-	pk.pack();
-
-	Msg msg;
-	msg.assign(pk.getBuf(), pk.getLen());
-	session->onMsg(linkid, req.sid, req.uid, &msg);
-
+		Msg msg;
+		msg.assign(pk.getBuf(), pk.getLen());
+		session->onMsg(linkid, req.sid, req.uid, &msg);
+	}
 exit:
 	Pack pk(SVID_MPROXY, PMPJoinRes::uri);
 	res.marshall(pk);

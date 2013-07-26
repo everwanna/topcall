@@ -21,6 +21,7 @@
 
 #define URI_MPROXY_NOTIFY_JOINED		1100
 #define URI_MPROXY_REJECT_INVITE		1101
+#define URI_MPROXY_NOTIFY_LEFT			1103
 
 struct PMPCreateReq : Packet {
 	enum { uri=URI_MPROXY_CREATE_REQ };
@@ -71,7 +72,7 @@ struct PMPRejectInvite : Packet {
 	enum { uri = URI_MPROXY_REJECT_INVITE };
 	int sid;
 	int uid;
-	int nickname;
+	std::string nickname;
 
 	virtual void unmarshall(Unpack & up) {
 		sid = up.popInt32();

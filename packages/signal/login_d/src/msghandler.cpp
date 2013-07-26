@@ -105,7 +105,7 @@ void MsgHandler::onCreateRoomReq(int linkid, Unpack* up) {
 	PVCallCreateRoomReq req;
 	req.unmarshall(*up);
 
-	LOG(TAG_LOGIN, "received create room request from user %d.", req.creator);
+	LOG(TAG_LOGIN, "received create room request from user %d.", req.uid);
 	//verify the uid is from the right link:
 	if( !m_pLoginMgr->getLinkMgr()->check( req.uid, linkid) ) {
 		LOG(TAG_LOGIN, "uid and linkid doesn't match, uid=%d, linkid=%d, while creating room.", req.uid, linkid);

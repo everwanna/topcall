@@ -1,4 +1,5 @@
 #include "msgcache.h"
+#include "msg.h"
 
 MsgCache::MsgCache(int max) : m_nMax(max) {
 }
